@@ -1,0 +1,36 @@
+package net.minecraft.world.entity.ai.sensing;
+
+import com.google.common.collect.ImmutableSet;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.item.ItemEntity;
+
+public class NearestItemSensor extends Sensor<Mob> {
+   private static final long f_148283_ = 8L;
+   private static final long f_148284_ = 4L;
+   public static final int f_148282_ = 9;
+
+   public Set<MemoryModuleType<?>> m_7163_() {
+      return ImmutableSet.of(MemoryModuleType.f_26332_);
+   }
+
+   protected void m_5578_(ServerLevel p_26697_, Mob p_26698_) {
+      Brain<?> brain = p_26698_.m_6274_();
+      List<ItemEntity> list = p_26697_.m_6443_(ItemEntity.class, p_26698_.m_142469_().m_82377_(8.0D, 4.0D, 8.0D), (p_26703_) -> {
+         return true;
+      });
+      list.sort(Comparator.comparingDouble(p_26698_::m_20280_));
+      Optional<ItemEntity> optional = list.stream().filter((p_26706_) -> {
+         return p_26698_.m_7243_(p_26706_.m_32055_());
+      }).filter((p_26701_) -> {
+         return p_26701_.m_19950_(p_26698_, 9.0D);
+      }).filter(p_26698_::m_142582_).findFirst();
+      brain.m_21886_(MemoryModuleType.f_26332_, optional);
+   }
+}

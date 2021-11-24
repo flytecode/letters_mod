@@ -1,0 +1,295 @@
+package net.minecraft.world.level.lighting;
+
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
+import java.util.Arrays;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.chunk.DataLayer;
+import net.minecraft.world.level.chunk.LightChunkGetter;
+
+public class SkyLightSectionStorage extends LayerLightSectionStorage<SkyLightSectionStorage.SkyDataLayerStorageMap> {
+   private static final Direction[] f_75860_ = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+   private final LongSet f_75861_ = new LongOpenHashSet();
+   private final LongSet f_75862_ = new LongOpenHashSet();
+   private final LongSet f_75863_ = new LongOpenHashSet();
+   private final LongSet f_75864_ = new LongOpenHashSet();
+   private volatile boolean f_75865_;
+
+   protected SkyLightSectionStorage(LightChunkGetter p_75868_) {
+      super(LightLayer.SKY, p_75868_, new SkyLightSectionStorage.SkyDataLayerStorageMap(new Long2ObjectOpenHashMap<>(), new Long2IntOpenHashMap(), Integer.MAX_VALUE));
+   }
+
+   protected int m_6181_(long p_75880_) {
+      return this.m_164457_(p_75880_, false);
+   }
+
+   protected int m_164457_(long p_164458_, boolean p_164459_) {
+      long i = SectionPos.m_123235_(p_164458_);
+      int j = SectionPos.m_123225_(i);
+      SkyLightSectionStorage.SkyDataLayerStorageMap skylightsectionstorage$skydatalayerstoragemap = p_164459_ ? this.f_75732_ : this.f_75731_;
+      int k = skylightsectionstorage$skydatalayerstoragemap.f_75901_.get(SectionPos.m_123240_(i));
+      if (k != skylightsectionstorage$skydatalayerstoragemap.f_75900_ && j < k) {
+         DataLayer datalayer = this.m_75761_(skylightsectionstorage$skydatalayerstoragemap, i);
+         if (datalayer == null) {
+            for(p_164458_ = BlockPos.m_122027_(p_164458_); datalayer == null; datalayer = this.m_75761_(skylightsectionstorage$skydatalayerstoragemap, i)) {
+               ++j;
+               if (j >= k) {
+                  return 15;
+               }
+
+               p_164458_ = BlockPos.m_121910_(p_164458_, 0, 16, 0);
+               i = SectionPos.m_123191_(i, Direction.UP);
+            }
+         }
+
+         return datalayer.m_62560_(SectionPos.m_123207_(BlockPos.m_121983_(p_164458_)), SectionPos.m_123207_(BlockPos.m_122008_(p_164458_)), SectionPos.m_123207_(BlockPos.m_122015_(p_164458_)));
+      } else {
+         return p_164459_ && !this.m_75892_(i) ? 0 : 15;
+      }
+   }
+
+   protected void m_6177_(long p_75885_) {
+      int i = SectionPos.m_123225_(p_75885_);
+      if ((this.f_75732_).f_75900_ > i) {
+         (this.f_75732_).f_75900_ = i;
+         (this.f_75732_).f_75901_.defaultReturnValue((this.f_75732_).f_75900_);
+      }
+
+      long j = SectionPos.m_123240_(p_75885_);
+      int k = (this.f_75732_).f_75901_.get(j);
+      if (k < i + 1) {
+         (this.f_75732_).f_75901_.put(j, i + 1);
+         if (this.f_75864_.contains(j)) {
+            this.m_75896_(p_75885_);
+            if (k > (this.f_75732_).f_75900_) {
+               long l = SectionPos.m_123209_(SectionPos.m_123213_(p_75885_), k - 1, SectionPos.m_123230_(p_75885_));
+               this.m_75894_(l);
+            }
+
+            this.m_75881_();
+         }
+      }
+
+   }
+
+   private void m_75894_(long p_75895_) {
+      this.f_75863_.add(p_75895_);
+      this.f_75862_.remove(p_75895_);
+   }
+
+   private void m_75896_(long p_75897_) {
+      this.f_75862_.add(p_75897_);
+      this.f_75863_.remove(p_75897_);
+   }
+
+   private void m_75881_() {
+      this.f_75865_ = !this.f_75862_.isEmpty() || !this.f_75863_.isEmpty();
+   }
+
+   protected void m_6187_(long p_75887_) {
+      long i = SectionPos.m_123240_(p_75887_);
+      boolean flag = this.f_75864_.contains(i);
+      if (flag) {
+         this.m_75894_(p_75887_);
+      }
+
+      int j = SectionPos.m_123225_(p_75887_);
+      if ((this.f_75732_).f_75901_.get(i) == j + 1) {
+         long k;
+         for(k = p_75887_; !this.m_75791_(k) && this.m_75870_(j); k = SectionPos.m_123191_(k, Direction.DOWN)) {
+            --j;
+         }
+
+         if (this.m_75791_(k)) {
+            (this.f_75732_).f_75901_.put(i, j + 1);
+            if (flag) {
+               this.m_75896_(k);
+            }
+         } else {
+            (this.f_75732_).f_75901_.remove(i);
+         }
+      }
+
+      if (flag) {
+         this.m_75881_();
+      }
+
+   }
+
+   protected void m_7358_(long p_75877_, boolean p_75878_) {
+      this.m_75785_();
+      if (p_75878_ && this.f_75864_.add(p_75877_)) {
+         int i = (this.f_75732_).f_75901_.get(p_75877_);
+         if (i != (this.f_75732_).f_75900_) {
+            long j = SectionPos.m_123209_(SectionPos.m_123213_(p_75877_), i - 1, SectionPos.m_123230_(p_75877_));
+            this.m_75896_(j);
+            this.m_75881_();
+         }
+      } else if (!p_75878_) {
+         this.f_75864_.remove(p_75877_);
+      }
+
+   }
+
+   protected boolean m_6808_() {
+      return super.m_6808_() || this.f_75865_;
+   }
+
+   protected DataLayer m_7667_(long p_75883_) {
+      DataLayer datalayer = this.f_75735_.get(p_75883_);
+      if (datalayer != null) {
+         return datalayer;
+      } else {
+         long i = SectionPos.m_123191_(p_75883_, Direction.UP);
+         int j = (this.f_75732_).f_75901_.get(SectionPos.m_123240_(p_75883_));
+         if (j != (this.f_75732_).f_75900_ && SectionPos.m_123225_(i) < j) {
+            DataLayer datalayer1;
+            while((datalayer1 = this.m_75758_(i, true)) == null) {
+               i = SectionPos.m_123191_(i, Direction.UP);
+            }
+
+            return m_182512_(datalayer1);
+         } else {
+            return new DataLayer();
+         }
+      }
+   }
+
+   private static DataLayer m_182512_(DataLayer p_182513_) {
+      if (p_182513_.m_62575_()) {
+         return new DataLayer();
+      } else {
+         byte[] abyte = p_182513_.m_7877_();
+         byte[] abyte1 = new byte[2048];
+
+         for(int i = 0; i < 16; ++i) {
+            System.arraycopy(abyte, 0, abyte1, i * 128, 128);
+         }
+
+         return new DataLayer(abyte1);
+      }
+   }
+
+   protected void m_6716_(LayerLightEngine<SkyLightSectionStorage.SkyDataLayerStorageMap, ?> p_75873_, boolean p_75874_, boolean p_75875_) {
+      super.m_6716_(p_75873_, p_75874_, p_75875_);
+      if (p_75874_) {
+         if (!this.f_75862_.isEmpty()) {
+            for(long i : this.f_75862_) {
+               int j = this.m_6172_(i);
+               if (j != 2 && !this.f_75863_.contains(i) && this.f_75861_.add(i)) {
+                  if (j == 1) {
+                     this.m_75764_(p_75873_, i);
+                     if (this.f_75733_.add(i)) {
+                        this.f_75732_.m_75524_(i);
+                     }
+
+                     Arrays.fill(this.m_75758_(i, true).m_7877_(), (byte)-1);
+                     int i3 = SectionPos.m_123223_(SectionPos.m_123213_(i));
+                     int k3 = SectionPos.m_123223_(SectionPos.m_123225_(i));
+                     int i4 = SectionPos.m_123223_(SectionPos.m_123230_(i));
+
+                     for(Direction direction : f_75860_) {
+                        long j1 = SectionPos.m_123191_(i, direction);
+                        if ((this.f_75863_.contains(j1) || !this.f_75861_.contains(j1) && !this.f_75862_.contains(j1)) && this.m_75791_(j1)) {
+                           for(int k1 = 0; k1 < 16; ++k1) {
+                              for(int l1 = 0; l1 < 16; ++l1) {
+                                 long i2;
+                                 long j2;
+                                 switch(direction) {
+                                 case NORTH:
+                                    i2 = BlockPos.m_121882_(i3 + k1, k3 + l1, i4);
+                                    j2 = BlockPos.m_121882_(i3 + k1, k3 + l1, i4 - 1);
+                                    break;
+                                 case SOUTH:
+                                    i2 = BlockPos.m_121882_(i3 + k1, k3 + l1, i4 + 16 - 1);
+                                    j2 = BlockPos.m_121882_(i3 + k1, k3 + l1, i4 + 16);
+                                    break;
+                                 case WEST:
+                                    i2 = BlockPos.m_121882_(i3, k3 + k1, i4 + l1);
+                                    j2 = BlockPos.m_121882_(i3 - 1, k3 + k1, i4 + l1);
+                                    break;
+                                 default:
+                                    i2 = BlockPos.m_121882_(i3 + 16 - 1, k3 + k1, i4 + l1);
+                                    j2 = BlockPos.m_121882_(i3 + 16, k3 + k1, i4 + l1);
+                                 }
+
+                                 p_75873_.m_75576_(i2, j2, p_75873_.m_6359_(i2, j2, 0), true);
+                              }
+                           }
+                        }
+                     }
+
+                     for(int j4 = 0; j4 < 16; ++j4) {
+                        for(int k4 = 0; k4 < 16; ++k4) {
+                           long l4 = BlockPos.m_121882_(SectionPos.m_175554_(SectionPos.m_123213_(i), j4), SectionPos.m_123223_(SectionPos.m_123225_(i)), SectionPos.m_175554_(SectionPos.m_123230_(i), k4));
+                           long i5 = BlockPos.m_121882_(SectionPos.m_175554_(SectionPos.m_123213_(i), j4), SectionPos.m_123223_(SectionPos.m_123225_(i)) - 1, SectionPos.m_175554_(SectionPos.m_123230_(i), k4));
+                           p_75873_.m_75576_(l4, i5, p_75873_.m_6359_(l4, i5, 0), true);
+                        }
+                     }
+                  } else {
+                     for(int k = 0; k < 16; ++k) {
+                        for(int l = 0; l < 16; ++l) {
+                           long i1 = BlockPos.m_121882_(SectionPos.m_175554_(SectionPos.m_123213_(i), k), SectionPos.m_175554_(SectionPos.m_123225_(i), 15), SectionPos.m_175554_(SectionPos.m_123230_(i), l));
+                           p_75873_.m_75576_(Long.MAX_VALUE, i1, 0, true);
+                        }
+                     }
+                  }
+               }
+            }
+         }
+
+         this.f_75862_.clear();
+         if (!this.f_75863_.isEmpty()) {
+            for(long k2 : this.f_75863_) {
+               if (this.f_75861_.remove(k2) && this.m_75791_(k2)) {
+                  for(int l2 = 0; l2 < 16; ++l2) {
+                     for(int j3 = 0; j3 < 16; ++j3) {
+                        long l3 = BlockPos.m_121882_(SectionPos.m_175554_(SectionPos.m_123213_(k2), l2), SectionPos.m_175554_(SectionPos.m_123225_(k2), 15), SectionPos.m_175554_(SectionPos.m_123230_(k2), j3));
+                        p_75873_.m_75576_(Long.MAX_VALUE, l3, 15, false);
+                     }
+                  }
+               }
+            }
+         }
+
+         this.f_75863_.clear();
+         this.f_75865_ = false;
+      }
+   }
+
+   protected boolean m_75870_(int p_75871_) {
+      return p_75871_ >= (this.f_75732_).f_75900_;
+   }
+
+   protected boolean m_75890_(long p_75891_) {
+      long i = SectionPos.m_123240_(p_75891_);
+      int j = (this.f_75732_).f_75901_.get(i);
+      return j == (this.f_75732_).f_75900_ || SectionPos.m_123225_(p_75891_) >= j;
+   }
+
+   protected boolean m_75892_(long p_75893_) {
+      long i = SectionPos.m_123240_(p_75893_);
+      return this.f_75864_.contains(i);
+   }
+
+   protected static final class SkyDataLayerStorageMap extends DataLayerStorageMap<SkyLightSectionStorage.SkyDataLayerStorageMap> {
+      int f_75900_;
+      final Long2IntOpenHashMap f_75901_;
+
+      public SkyDataLayerStorageMap(Long2ObjectOpenHashMap<DataLayer> p_75903_, Long2IntOpenHashMap p_75904_, int p_75905_) {
+         super(p_75903_);
+         this.f_75901_ = p_75904_;
+         p_75904_.defaultReturnValue(p_75905_);
+         this.f_75900_ = p_75905_;
+      }
+
+      public SkyLightSectionStorage.SkyDataLayerStorageMap m_5972_() {
+         return new SkyLightSectionStorage.SkyDataLayerStorageMap(this.f_75518_.clone(), this.f_75901_.clone(), this.f_75900_);
+      }
+   }
+}

@@ -1,0 +1,182 @@
+package net.minecraft.world.level.lighting;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.DataLayer;
+import net.minecraft.world.level.chunk.LightChunkGetter;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.mutable.MutableInt;
+
+public final class SkyLightEngine extends LayerLightEngine<SkyLightSectionStorage.SkyDataLayerStorageMap, SkyLightSectionStorage> {
+   private static final Direction[] f_75839_ = Direction.values();
+   private static final Direction[] f_75840_ = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+
+   public SkyLightEngine(LightChunkGetter p_75843_) {
+      super(p_75843_, LightLayer.SKY, new SkyLightSectionStorage(p_75843_));
+   }
+
+   protected int m_6359_(long p_75855_, long p_75856_, int p_75857_) {
+      if (p_75856_ != Long.MAX_VALUE && p_75855_ != Long.MAX_VALUE) {
+         if (p_75857_ >= 15) {
+            return p_75857_;
+         } else {
+            MutableInt mutableint = new MutableInt();
+            BlockState blockstate = this.m_75664_(p_75856_, mutableint);
+            if (mutableint.getValue() >= 15) {
+               return 15;
+            } else {
+               int i = BlockPos.m_121983_(p_75855_);
+               int j = BlockPos.m_122008_(p_75855_);
+               int k = BlockPos.m_122015_(p_75855_);
+               int l = BlockPos.m_121983_(p_75856_);
+               int i1 = BlockPos.m_122008_(p_75856_);
+               int j1 = BlockPos.m_122015_(p_75856_);
+               int k1 = Integer.signum(l - i);
+               int l1 = Integer.signum(i1 - j);
+               int i2 = Integer.signum(j1 - k);
+               Direction direction = Direction.m_122378_(k1, l1, i2);
+               if (direction == null) {
+                  throw new IllegalStateException(String.format("Light was spread in illegal direction %d, %d, %d", k1, l1, i2));
+               } else {
+                  BlockState blockstate1 = this.m_75664_(p_75855_, (MutableInt)null);
+                  VoxelShape voxelshape = this.m_75678_(blockstate1, p_75855_, direction);
+                  VoxelShape voxelshape1 = this.m_75678_(blockstate, p_75856_, direction.m_122424_());
+                  if (Shapes.m_83145_(voxelshape, voxelshape1)) {
+                     return 15;
+                  } else {
+                     boolean flag = i == l && k == j1;
+                     boolean flag1 = flag && j > i1;
+                     return flag1 && p_75857_ == 0 && mutableint.getValue() == 0 ? 0 : p_75857_ + Math.max(1, mutableint.getValue());
+                  }
+               }
+            }
+         }
+      } else {
+         return 15;
+      }
+   }
+
+   protected void m_7900_(long p_75845_, int p_75846_, boolean p_75847_) {
+      long i = SectionPos.m_123235_(p_75845_);
+      int j = BlockPos.m_122008_(p_75845_);
+      int k = SectionPos.m_123207_(j);
+      int l = SectionPos.m_123171_(j);
+      int i1;
+      if (k != 0) {
+         i1 = 0;
+      } else {
+         int j1;
+         for(j1 = 0; !this.f_75632_.m_75791_(SectionPos.m_123186_(i, 0, -j1 - 1, 0)) && this.f_75632_.m_75870_(l - j1 - 1); ++j1) {
+         }
+
+         i1 = j1;
+      }
+
+      long j3 = BlockPos.m_121910_(p_75845_, 0, -1 - i1 * 16, 0);
+      long k1 = SectionPos.m_123235_(j3);
+      if (i == k1 || this.f_75632_.m_75791_(k1)) {
+         this.m_75593_(p_75845_, j3, p_75846_, p_75847_);
+      }
+
+      long l1 = BlockPos.m_121915_(p_75845_, Direction.UP);
+      long i2 = SectionPos.m_123235_(l1);
+      if (i == i2 || this.f_75632_.m_75791_(i2)) {
+         this.m_75593_(p_75845_, l1, p_75846_, p_75847_);
+      }
+
+      for(Direction direction : f_75840_) {
+         int j2 = 0;
+
+         while(true) {
+            long k2 = BlockPos.m_121910_(p_75845_, direction.m_122429_(), -j2, direction.m_122431_());
+            long l2 = SectionPos.m_123235_(k2);
+            if (i == l2) {
+               this.m_75593_(p_75845_, k2, p_75846_, p_75847_);
+               break;
+            }
+
+            if (this.f_75632_.m_75791_(l2)) {
+               long i3 = BlockPos.m_121910_(p_75845_, 0, -j2, 0);
+               this.m_75593_(i3, k2, p_75846_, p_75847_);
+            }
+
+            ++j2;
+            if (j2 > i1 * 16) {
+               break;
+            }
+         }
+      }
+
+   }
+
+   protected int m_6357_(long p_75849_, long p_75850_, int p_75851_) {
+      int i = p_75851_;
+      long j = SectionPos.m_123235_(p_75849_);
+      DataLayer datalayer = this.f_75632_.m_75758_(j, true);
+
+      for(Direction direction : f_75839_) {
+         long k = BlockPos.m_121915_(p_75849_, direction);
+         if (k != p_75850_) {
+            long l = SectionPos.m_123235_(k);
+            DataLayer datalayer1;
+            if (j == l) {
+               datalayer1 = datalayer;
+            } else {
+               datalayer1 = this.f_75632_.m_75758_(l, true);
+            }
+
+            int i1;
+            if (datalayer1 != null) {
+               i1 = this.m_75682_(datalayer1, k);
+            } else {
+               if (direction == Direction.DOWN) {
+                  continue;
+               }
+
+               i1 = 15 - this.f_75632_.m_164457_(k, true);
+            }
+
+            int j1 = this.m_6359_(k, p_75849_, i1);
+            if (i > j1) {
+               i = j1;
+            }
+
+            if (i == 0) {
+               return i;
+            }
+         }
+      }
+
+      return i;
+   }
+
+   protected void m_6185_(long p_75859_) {
+      this.f_75632_.m_75785_();
+      long i = SectionPos.m_123235_(p_75859_);
+      if (this.f_75632_.m_75791_(i)) {
+         super.m_6185_(p_75859_);
+      } else {
+         for(p_75859_ = BlockPos.m_122027_(p_75859_); !this.f_75632_.m_75791_(i) && !this.f_75632_.m_75890_(i); p_75859_ = BlockPos.m_121910_(p_75859_, 0, 16, 0)) {
+            i = SectionPos.m_123191_(i, Direction.UP);
+         }
+
+         if (this.f_75632_.m_75791_(i)) {
+            super.m_6185_(p_75859_);
+         }
+      }
+
+   }
+
+   public String m_6647_(long p_75853_) {
+      return super.m_6647_(p_75853_) + (this.f_75632_.m_75890_(p_75853_) ? "*" : "");
+   }
+
+   @Override
+   public int queuedUpdateSize() {
+      return 0;
+   }
+}

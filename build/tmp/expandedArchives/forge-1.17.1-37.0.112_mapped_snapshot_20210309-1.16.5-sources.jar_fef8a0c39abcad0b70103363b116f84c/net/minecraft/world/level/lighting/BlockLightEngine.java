@@ -1,0 +1,125 @@
+package net.minecraft.world.level.lighting;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.DataLayer;
+import net.minecraft.world.level.chunk.LightChunkGetter;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.mutable.MutableInt;
+
+public final class BlockLightEngine extends LayerLightEngine<BlockLightSectionStorage.BlockDataLayerStorageMap, BlockLightSectionStorage> {
+   private static final Direction[] f_75488_ = Direction.values();
+   private final BlockPos.MutableBlockPos f_75489_ = new BlockPos.MutableBlockPos();
+
+   public BlockLightEngine(LightChunkGetter p_75492_) {
+      super(p_75492_, LightLayer.BLOCK, new BlockLightSectionStorage(p_75492_));
+   }
+
+   private int m_75508_(long p_75509_) {
+      int i = BlockPos.m_121983_(p_75509_);
+      int j = BlockPos.m_122008_(p_75509_);
+      int k = BlockPos.m_122015_(p_75509_);
+      BlockGetter blockgetter = this.f_75630_.m_6196_(SectionPos.m_123171_(i), SectionPos.m_123171_(k));
+      return blockgetter != null ? blockgetter.m_7146_(this.f_75489_.m_122178_(i, j, k)) : 0;
+   }
+
+   protected int m_6359_(long p_75505_, long p_75506_, int p_75507_) {
+      if (p_75506_ == Long.MAX_VALUE) {
+         return 15;
+      } else if (p_75505_ == Long.MAX_VALUE) {
+         return p_75507_ + 15 - this.m_75508_(p_75506_);
+      } else if (p_75507_ >= 15) {
+         return p_75507_;
+      } else {
+         int i = Integer.signum(BlockPos.m_121983_(p_75506_) - BlockPos.m_121983_(p_75505_));
+         int j = Integer.signum(BlockPos.m_122008_(p_75506_) - BlockPos.m_122008_(p_75505_));
+         int k = Integer.signum(BlockPos.m_122015_(p_75506_) - BlockPos.m_122015_(p_75505_));
+         Direction direction = Direction.m_122378_(i, j, k);
+         if (direction == null) {
+            return 15;
+         } else {
+            MutableInt mutableint = new MutableInt();
+            BlockState blockstate = this.m_75664_(p_75506_, mutableint);
+            if (mutableint.getValue() >= 15) {
+               return 15;
+            } else {
+               BlockState blockstate1 = this.m_75664_(p_75505_, (MutableInt)null);
+               VoxelShape voxelshape = this.m_75678_(blockstate1, p_75505_, direction);
+               VoxelShape voxelshape1 = this.m_75678_(blockstate, p_75506_, direction.m_122424_());
+               return Shapes.m_83145_(voxelshape, voxelshape1) ? 15 : p_75507_ + Math.max(1, mutableint.getValue());
+            }
+         }
+      }
+   }
+
+   protected void m_7900_(long p_75494_, int p_75495_, boolean p_75496_) {
+      long i = SectionPos.m_123235_(p_75494_);
+
+      for(Direction direction : f_75488_) {
+         long j = BlockPos.m_121915_(p_75494_, direction);
+         long k = SectionPos.m_123235_(j);
+         if (i == k || this.f_75632_.m_75791_(k)) {
+            this.m_75593_(p_75494_, j, p_75495_, p_75496_);
+         }
+      }
+
+   }
+
+   protected int m_6357_(long p_75498_, long p_75499_, int p_75500_) {
+      int i = p_75500_;
+      if (Long.MAX_VALUE != p_75499_) {
+         int j = this.m_6359_(Long.MAX_VALUE, p_75498_, 0);
+         if (p_75500_ > j) {
+            i = j;
+         }
+
+         if (i == 0) {
+            return i;
+         }
+      }
+
+      long j1 = SectionPos.m_123235_(p_75498_);
+      DataLayer datalayer = this.f_75632_.m_75758_(j1, true);
+
+      for(Direction direction : f_75488_) {
+         long k = BlockPos.m_121915_(p_75498_, direction);
+         if (k != p_75499_) {
+            long l = SectionPos.m_123235_(k);
+            DataLayer datalayer1;
+            if (j1 == l) {
+               datalayer1 = datalayer;
+            } else {
+               datalayer1 = this.f_75632_.m_75758_(l, true);
+            }
+
+            if (datalayer1 != null) {
+               int i1 = this.m_6359_(k, p_75498_, this.m_75682_(datalayer1, k));
+               if (i > i1) {
+                  i = i1;
+               }
+
+               if (i == 0) {
+                  return i;
+               }
+            }
+         }
+      }
+
+      return i;
+   }
+
+   public void m_142519_(BlockPos p_75502_, int p_75503_) {
+      this.f_75632_.m_75785_();
+      this.m_75576_(Long.MAX_VALUE, p_75502_.m_121878_(), 15 - p_75503_, true);
+   }
+
+   @Override
+   public int queuedUpdateSize() {
+      return f_75632_.queuedUpdateSize();
+   }
+}
