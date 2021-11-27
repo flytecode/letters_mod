@@ -1,9 +1,12 @@
 package com.cs32.lettersmod;
 
+import com.cs32.lettersmod.block.LettersBlocks;
+import com.cs32.lettersmod.item.LetterItems;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
@@ -21,8 +24,12 @@ import java.util.stream.Collectors;
 @Mod("lettersmod")
 public class LettersMod
 {
+    // id for the mod
+    public static final String MOD_ID = "lettersmod";
+
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
+
 
     public LettersMod() {
         // Register the setup method for modloading
@@ -34,6 +41,12 @@ public class LettersMod
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        // register new blocks and items
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        LetterItems.register(eventBus);
+        LettersBlocks.register(eventBus);
+
     }
 
     private void setup(final FMLCommonSetupEvent event)

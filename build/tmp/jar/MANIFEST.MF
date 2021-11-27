@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
-Specification-Title: examplemod
-Specification-Vendor: examplemodsareus
+Specification-Title: lettersmod
+Specification-Vendor: cs32
 Specification-Version: 1
 Implementation-Title: letters_mod
 Implementation-Version: 1.0
-Implementation-Vendor: examplemodsareus
-Implementation-Timestamp: 2021-11-24T16:23:34-0500
+Implementation-Vendor: cs32
+Implementation-Timestamp: 2021-11-27T16:16:11-0500
 
