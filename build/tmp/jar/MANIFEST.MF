@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Specification-Title: lettersmod
-Specification-Vendor: cs32
-Specification-Version: 1
-Implementation-Title: letters_mod
-Implementation-Version: 1.0
-Implementation-Vendor: cs32
-Implementation-Timestamp: 2021-11-27T16:16:11-0500
-
