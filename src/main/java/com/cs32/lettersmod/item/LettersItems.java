@@ -1,5 +1,6 @@
-package com.cs32.lettersmod;
+package com.cs32.lettersmod.item;
 
+import com.cs32.lettersmod.LettersMod;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -18,6 +19,10 @@ public class LettersItems {
   // creating letter item
   public static final RegistryObject<Item> LETTER = ITEMS.register("letter",
       () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
+
+  // stamp item
+  public static final RegistryObject<Item> STAMP = ITEMS.register("stamp",
+          () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
 
   // empty envelope item
   public static final RegistryObject<Item> EMPTY_ENVELOPE = ITEMS.register("empty_envelope",

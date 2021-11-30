@@ -1,5 +1,7 @@
 package com.cs32.lettersmod;
 
+import com.cs32.lettersmod.block.LettersBlocks;
+import com.cs32.lettersmod.item.LettersItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,6 +33,9 @@ public class LettersMod
 
     public LettersMod() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        LettersItems.register(eventBus);
+        LettersBlocks.register(eventBus);
 
         // Register the setup method for modloading
         eventBus.addListener(this::setup);

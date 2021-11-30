@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "texturs": {
+    "all": "assets.lettersmod:models.block/mailbox"
+  }
+}

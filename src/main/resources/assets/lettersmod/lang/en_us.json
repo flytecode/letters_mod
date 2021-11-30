@@ -1,3 +1,7 @@
 {
-  "item.lettersmod.amethyst": "Amethyst"
+  "item.lettersmod.empty_envelope": "Empty Envelope",
+  "item.lettersmod.sealed_envelope": "Sealed Envelope",
+  "item.lettersmod.letter": "Letter",
+  "item.lettersmod.stamp": "Stamp",
+  "block.lettersmod.mailbox": "Mailbox"
 }
