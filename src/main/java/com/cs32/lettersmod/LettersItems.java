@@ -15,8 +15,19 @@ public class LettersItems {
     ITEMS.register(eventBus);
   }
 
-  // lines where you can add an item to the game
-  public static final RegistryObject<Item> AMETHYST = ITEMS.register("amethyst",
+  // creating letter item
+  public static final RegistryObject<Item> LETTER = ITEMS.register("letter",
       () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
+
+  // empty envelope item
+  public static final RegistryObject<Item> EMPTY_ENVELOPE = ITEMS.register("empty_envelope",
+          () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
+
+  // sealed envelope item
+  public static final RegistryObject<Item> SEALED_ENVELOPE = ITEMS.register("sealed_envelope",
+          () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
+
+
+
 
 }
