@@ -1,0 +1,12 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="MIT"
+[[mods]]
+modId="envelope"
+version="${file.jarVersion}"
+displayName="Envelope Mod"
+logoFile="examplemod.png"
+credits=""
+authors=""
+description='''
+'''
