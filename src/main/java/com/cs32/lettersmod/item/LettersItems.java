@@ -17,7 +17,7 @@ public class LettersItems {
   }
 
   // creating letter item
-  public static final RegistryObject<Item> LETTER = ITEMS.register("letter",
+  public static final RegistryObject<Item> ENVELOPE = ITEMS.register("envelope",
       () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
 
   // stamp item
