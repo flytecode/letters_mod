@@ -49,11 +49,11 @@ import static net.minecraft.util.math.MathHelper.clamp;
  */
 public class GetMailCommand {
   public static void register(CommandDispatcher<CommandSource> dispatcher) {
-    LiteralArgumentBuilder<CommandSource> mbequoteCommand
-        = Commands.literal("mbequote")
+    LiteralArgumentBuilder<CommandSource> getmailCommand
+        = Commands.literal("getmail")
         .requires((commandSource) -> commandSource.hasPermissionLevel(1))
-        .then(Commands.literal("python")
-            .executes(commandContext -> sendMessage(commandContext, QuoteSource.MONTY_PYTHON.getQuote()))
+        .then(Commands.literal("test")
+            .executes(commandContext -> sendMessage(commandContext, commandContext.getSource().getDisplayName().toString()))
         )
         .then(Commands.literal("blues")
             .executes(commandContext -> sendMessage(commandContext, QuoteSource.BLUES_BROTHERS.getQuote()))
@@ -83,7 +83,14 @@ public class GetMailCommand {
         )
         .executes(commandContext -> sendMessage(commandContext, "Nothing to say!"));  // blank: didn't match a literal or the custommessage argument
 
-    dispatcher.register(mbequoteCommand);
+    dispatcher.register(getmailCommand);
+  }
+
+  static int addToMailbox(CommandContext<CommandSource> commandContext) throws CommandSyntaxException {
+    //TODO function that adds items to the global mailbox inventory
+    // makes a call to the server using global address and info, and then loops through results and adds
+    // if adding any more packages would overfill the mailbox, it stops.
+    return 1;
   }
 
   static int sendMessage(CommandContext<CommandSource> commandContext, String message) throws CommandSyntaxException {

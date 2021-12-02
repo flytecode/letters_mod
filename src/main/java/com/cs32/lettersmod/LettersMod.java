@@ -2,8 +2,11 @@ package com.cs32.lettersmod;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -78,6 +81,38 @@ public class LettersMod {
   public void onServerStarting(FMLServerStartingEvent event) {
     // do something when the server starts
     LOGGER.info("HELLO from server starting");
+  }
+
+  // from forums https://forums.minecraftforge.net/topic/83420-solved-1152-saving-and-loading-data-per-world/
+  @SubscribeEvent
+  public void onClientSetupEvent(final FMLClientSetupEvent event) {
+    LOGGER.debug("Hellooo from the Client Setup!");
+  }
+
+  // from forums https://forums.minecraftforge.net/topic/83420-solved-1152-saving-and-loading-data-per-world/
+  @SubscribeEvent
+  public void onWorldLoaded(WorldEvent.Load event) {
+    if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
+      LettersSavedData saver = LettersSavedData.forWorld((ServerWorld) event.getWorld());
+
+      if (saver.data.contains("MyData")) {
+        LOGGER.debug("Found my data: " + saver.data.get("MyData"));
+        //Do whatever you want to do with the data
+      }
+    }
+  }
+
+  // from forums https://forums.minecraftforge.net/topic/83420-solved-1152-saving-and-loading-data-per-world/
+  @SubscribeEvent
+  public void onWorldSaved(WorldEvent.Save event) {
+    if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
+      LettersSavedData saver = LettersSavedData.forWorld((ServerWorld) event.getWorld());
+      CompoundNBT myData = new CompoundNBT();
+      myData.putInt("MyData", 69); //Put in whatever you want with myData.put
+      saver.data = myData;
+      saver.markDirty();
+      LOGGER.debug("Put my data in!");
+    }
   }
 
   // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
