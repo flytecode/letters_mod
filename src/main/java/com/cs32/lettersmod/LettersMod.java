@@ -97,12 +97,13 @@ public class LettersMod {
 
       if (saver.data.contains("MyData")) {
         LOGGER.debug("Found my data: " + saver.data.get("MyData"));
-        //Do whatever you want to do with the data
+        //Do whatever you want to do with the data // TODO is this where we will interface w TileEntity?
       }
     }
   }
 
   // from forums https://forums.minecraftforge.net/topic/83420-solved-1152-saving-and-loading-data-per-world/
+  // TODO use this code in the TileEntity
   @SubscribeEvent
   public void onWorldSaved(WorldEvent.Save event) {
     if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
