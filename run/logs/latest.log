@@ -116,3 +116,4 @@ com.mojang.authlib.exceptions.AuthenticationUnavailableException: null
 [01Dec2021 21:08:58.524] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (New World): All chunks are saved
 [01Dec2021 21:08:58.526] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
 [01Dec2021 21:08:58.526] [Server thread/INFO] [net.minecraft.world.server.ChunkManager/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[01Dec2021 21:33:46.197] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!
