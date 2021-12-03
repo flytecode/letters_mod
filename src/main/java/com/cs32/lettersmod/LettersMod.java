@@ -1,5 +1,7 @@
 package com.cs32.lettersmod;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
@@ -103,10 +105,27 @@ public class LettersMod {
   }
 
   // from forums https://forums.minecraftforge.net/topic/83420-solved-1152-saving-and-loading-data-per-world/
-  // TODO use this code in the TileEntity
   @SubscribeEvent
   public void onWorldSaved(WorldEvent.Save event) {
     if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
+      // TODO this all should be in tileentity not in here
+
+      // setup json for the post request body (header info is in executePost)
+      JsonObject reqBody = new JsonObject();
+      reqBody.addProperty("lat1", 41.828147);
+      reqBody.addProperty("lon1", -71.407971);
+      reqBody.addProperty("lat2", 41.823142);
+      reqBody.addProperty("lon2", -71.392231);
+
+      // make post request to server
+      String postRes = ApiClient.executePost("http://localhost:4567/ways", reqBody.toString());
+
+      // get and print out the results of post request
+      assert postRes != null;
+      JsonObject postResJson = new JsonParser().parse(postRes).getAsJsonObject();
+      LOGGER.debug("executePost: " + postResJson.toString());
+
+
       LettersSavedData saver = LettersSavedData.forWorld((ServerWorld) event.getWorld());
       CompoundNBT myData = new CompoundNBT();
       myData.putInt("MyData", 69); //Put in whatever you want with myData.put
