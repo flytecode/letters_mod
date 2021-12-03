@@ -46,9 +46,6 @@ public class LettersMod
         // Register the doClientStuff method for modloading
         eventBus.addListener(this::doClientStuff);
 
-        // Register our items class
-        LettersItems.register(eventBus);
-
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
