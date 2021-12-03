@@ -1,31 +1,56 @@
 package com.cs32.lettersmod;
 
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 
 /**
- * This is the ApiClient class, which creates and client and sends a response using the client.
- * Use the getData() method to get the body of the response.
+ * This class stores helper functions that allow for easy "post" requests (get it like mail)
+ *
+ * How to use:
+ *
+ * ApiClient poster = new ApiClient("http://localhost:4567/ways");
+ *               JsonObject reqBody = new JsonObject();
+ *               reqBody.addProperty("lat1", 41.828147);
+ *               reqBody.addProperty("lon1", -71.407971);
+ *               reqBody.addProperty("lat2", 41.823142);
+ *               reqBody.addProperty("lon2", -71.392231);
+ *
  */
 public class ApiClient {
 
+  private final String tURL; // http://localhost:4567/ways
+
+  public ApiClient(String targetURL) {
+    tURL = targetURL;
+  }
+
+  public JsonObject postFromJson(JsonObject jo) {
+    // make post request to server
+    String postRes = this.executePost(jo.toString());
+
+    // get and print out the results of post request
+    assert postRes != null;
+    return (new JsonParser().parse(postRes).getAsJsonObject());
+  }
+
   // a "post" request lmao!!! XD
   // urlParameters has to be a stringified json that contains just the body information
-  public static String executePost(String targetURL, String urlParameters) {
+  private String executePost(String urlParameters) {
     HttpURLConnection connection = null;
-
-    //DEBUG
-    System.out.println(urlParameters);
 
     try {
       //Create connection
-      URL url = new URL(targetURL);
+      URL url = new URL(this.tURL);
       connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("POST");
       connection.setRequestProperty("Content-Type",
@@ -41,7 +66,7 @@ public class ApiClient {
       connection.setDoOutput(true);
 
       //Send request
-      DataOutputStream wr = new DataOutputStream (
+      DataOutputStream wr = new DataOutputStream(
           connection.getOutputStream());
       wr.writeBytes(urlParameters);
       wr.close();
@@ -66,64 +91,4 @@ public class ApiClient {
       }
     }
   }
-
-
-//  private final HttpClient client;
-//  private String data;
-//
-//  /**
-//   * Constructor for ApiClient. Makes a new HttpClient builder, specifying the version and timeout.
-//   */
-//  public ApiClient() {
-//    // HttpClient with version HTTP_2 and connection timeout of 15 seconds.
-//    // See https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html
-//
-//    this.client = HttpClient.newBuilder()
-//        .version(HttpClient.Version.HTTP_2)
-//        .connectTimeout(Duration.ofSeconds(15))
-//        .build();
-//  }
-//
-//  /**
-//   * This method makes a request and stores the body of the response.
-//   *
-//   * @param req to send to the client
-//   */
-//  public void makeRequest(HttpRequest req) {
-//    try {
-//      HttpResponse<String> apiResponse = client.send(req, HttpResponse.BodyHandlers.ofString());
-//      // System.out.println("Status " + apiResponse.statusCode());    //uncomment for testing
-//      data = apiResponse.body();
-//
-//    } catch (IOException ioe) {
-//      System.out.println("An I/O error occurred when sending or receiving data.");
-//      System.out.println(ioe.getMessage());
-//
-//    } catch (InterruptedException ie) {
-//      System.out.println("The operation was interrupted.");
-//      System.out.println(ie.getMessage());
-//
-//    } catch (IllegalArgumentException iae) {
-//      System.out.println(
-//          "The request argument was invalid. "
-//              + "It must be built as specified by HttpRequest.Builder.");
-//      System.out.println(iae.getMessage());
-//
-//    } catch (SecurityException se) {
-//      System.out.println("There was a security configuration error.");
-//      System.out.println(se.getMessage());
-//    }
-//  }
-//
-//  /**
-//   * This method returns the data stored in the data variable, which was given a value from
-//   * the makeRequest() method.
-//   *
-//   * @return data found in response body
-//   */
-//  public String getData() {
-//    String dataTemp = data;
-//    data = null;
-//    return dataTemp;
-//  }
 }

@@ -16,5 +16,6 @@ public class RegisterCommandEvent {
   public static void onRegisterCommandEvent(RegisterCommandsEvent event) {
     CommandDispatcher<CommandSource> commandDispatcher = event.getDispatcher();
     GetMailCommand.register(commandDispatcher);
+    ChangeAddrCommand.register(commandDispatcher);
   }
 }
