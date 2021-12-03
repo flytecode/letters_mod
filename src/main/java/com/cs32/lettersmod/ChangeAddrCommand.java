@@ -9,11 +9,15 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.MessageArgument;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.server.ServerWorld;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.Random;
 
@@ -30,53 +34,89 @@ public class ChangeAddrCommand {
     LiteralArgumentBuilder<CommandSource> changeaddrCommand
         = Commands.literal("changeaddr")
         .requires((commandSource) -> commandSource.hasPermissionLevel(1))
-        .then(Commands.argument("oldaddr", MessageArgument.message())  // see also StringArgumentType; .word() or .string() or .greedystring()
-            .executes(commandContext -> {
-              ITextComponent iTextComponent = MessageArgument.getMessage(commandContext, "oldaddr");
-              Integer oldAddr = Integer.parseInt(iTextComponent.getString());
-              // TODO check to make sure old addr is right
+        .then(Commands.argument("oldaddr",
+                    MessageArgument.message())  // see also StringArgumentType; .word() or .string() or .greedystring()
+                .executes(commandContext -> {
+                  // parse the user argument for the old/current address
+                  ITextComponent iTextComponent = MessageArgument.getMessage(commandContext, "oldaddr");
+                  Integer oldAddress = Integer.parseInt(iTextComponent.getString());
 
-              // set up apiclient, send a post request to server with old addr
-              ApiClient poster = new ApiClient("http://localhost:4567/changeaddr");
-              JsonObject reqBody = new JsonObject();
-              reqBody.addProperty("oldaddr", oldAddr);
-              JsonObject reqResult = poster.postFromJson(reqBody);
+                  // code that loads up value for current address and makes sure it is equal to inputted oldaddr
+                  // TODO is this client code? If so is this wrong, trying to access the server? this could cause weird bugs possibly.
+                  ServerWorld world = commandContext.getSource().getWorld();
+                  if (!world.isRemote()) {
+                    LettersSavedData saver = LettersSavedData.forWorld(world);
+                    if (saver.data.contains("world_address")) {
+                      INBT currentAddress = saver.data.get("world_address");
+                      //TODO WORK WITH INBT AND REFACTOR THIS CODE
+                      if (!currentAddress.equals(oldAddress)) {
+                        // incorrect oldaddr, tell the user and don't do anything else
+                        sendMessage(commandContext, "oldaddr does not match current world_address.");
+                      } else {
+                        // set up apiclient, send a post request to server with old addr
+                        ApiClient poster = new ApiClient("http://localhost:4567/changeaddr");
+                        JsonObject reqBody = new JsonObject();
+                        reqBody.addProperty("oldaddr", oldAddress);
+                        JsonObject reqResult = poster.postFromJson(reqBody);
 
-              // get back the new addr and print it out
-              Integer newAddr = reqResult.get("newaddr").getAsInt();
-              sendMessage(commandContext, Integer.toString(newAddr)); // iTextComponent.getFormattedText());
-              // TODO save the new address in global save data
-              return 1;
-            })
+                        // get back the new addr and print it out
+                        Integer newAddr = reqResult.get("newaddr").getAsInt();
+                        sendMessage(commandContext,
+                            Integer.toString(newAddr) + " being set as world_address");
+                        // TODO save the new address in global save data
+//                  LettersSavedData saver = LettersSavedData.forWorld((ServerWorld) event.getWorld());
+//                  CompoundNBT myData = new CompoundNBT();
+//                  myData.putInt("MyData", 69); //Put in whatever you want with myData.put
+//                  saver.data = myData;
+//                  saver.markDirty();
+//                  LOGGER.debug("Put my data in!");
+
+                        return 1;
+                      }
+
+
+                    } else {
+                      // this shouldn't happen, world_address should be set
+                      sendMessage(commandContext, "world_address was not set");
+                    }
+
+
+                  }
+                })
         )
-        .executes(commandContext -> sendMessage(commandContext, "Please enter this world's old address."));  // blank: didn't match a literal or the custommessage argument
+        .executes(commandContext -> sendMessage(commandContext,
+            "Please enter this world's old address."));  // blank: didn't match a literal or the custommessage argument
 
     dispatcher.register(changeaddrCommand);
   }
 
-  static boolean checkOldAddr(CommandContext<CommandSource> commandContext) throws CommandSyntaxException {
+  static boolean checkOldAddr(CommandContext<CommandSource> commandContext)
+      throws CommandSyntaxException {
     //TODO function that checks old address provided by player to make sure we good to go
     return false;
   }
 
-  static void resetAddr(CommandContext<CommandSource> commandContext) throws CommandSyntaxException {
+  static void resetAddr(CommandContext<CommandSource> commandContext)
+      throws CommandSyntaxException {
     //TODO function that takes the new addr output from the request to server and saves it in global addr var
   }
 
-  static int sendMessage(CommandContext<CommandSource> commandContext, String message) throws CommandSyntaxException {
+  static int sendMessage(CommandContext<CommandSource> commandContext, String message)
+      throws CommandSyntaxException {
     TranslationTextComponent finalText = new TranslationTextComponent("chat.type.announcement",
         commandContext.getSource().getDisplayName(), new StringTextComponent(message));
 
     Entity entity = commandContext.getSource().getEntity();
     if (entity != null) {
-      commandContext.getSource().getServer().getPlayerList().func_232641_a_(finalText, ChatType.CHAT, entity.getUniqueID());
+      commandContext.getSource().getServer().getPlayerList()
+          .func_232641_a_(finalText, ChatType.CHAT, entity.getUniqueID());
       //func_232641_a_ is sendMessage()
     } else {
-      commandContext.getSource().getServer().getPlayerList().func_232641_a_(finalText, ChatType.SYSTEM, Util.DUMMY_UUID);
+      commandContext.getSource().getServer().getPlayerList()
+          .func_232641_a_(finalText, ChatType.SYSTEM, Util.DUMMY_UUID);
     }
     return 1;
   }
-
 
 
 }
