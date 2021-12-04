@@ -32,7 +32,11 @@ public class Parcel {
   }
 
   public String getRecipient() {
-    return recipient;
+    return this.recipient;
+  }
+
+  public String getSender() {
+    return this.sender;
   }
 
   public boolean getDownloaded() {
@@ -49,5 +53,6 @@ public class Parcel {
   public String getParcel() {
     return this.parcel;
   }
+
 
 }
