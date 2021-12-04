@@ -22,11 +22,11 @@ public class Address {
   }
 
   public String getAddress() {
-    return address;
+    return this.address;
   }
 
   public String getTrueKey() {
-    return trueKey;
+    return this.trueKey;
   }
 
   public boolean getActive() {
