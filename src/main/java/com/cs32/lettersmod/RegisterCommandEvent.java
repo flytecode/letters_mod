@@ -1,11 +1,11 @@
 package com.cs32.lettersmod;
 
+import com.cs32.lettersmod.command.ChangeAddrCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
-import com.cs32.lettersmod.GetMailCommand;
+import com.cs32.lettersmod.command.GetMailCommand;
 
 /**
  * Register our commands when the server starts up.
