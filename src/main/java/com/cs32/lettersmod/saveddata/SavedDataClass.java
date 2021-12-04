@@ -8,6 +8,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 
+// class that puts a CompoundNBT, indicated by nbtKey, in and out of world saved data
 // from forums https://forums.minecraftforge.net/topic/83420-solved-1152-saving-and-loading-data-per-world/
 public class SavedDataClass extends WorldSavedData implements Supplier {
   private String nbtKey = "";

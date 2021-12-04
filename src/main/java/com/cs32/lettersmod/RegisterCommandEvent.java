@@ -1,6 +1,7 @@
 package com.cs32.lettersmod;
 
 import com.cs32.lettersmod.command.ChangeAddrCommand;
+import com.cs32.lettersmod.command.InitAddrCommand;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -17,5 +18,6 @@ public class RegisterCommandEvent {
     CommandDispatcher<CommandSource> commandDispatcher = event.getDispatcher();
     GetMailCommand.register(commandDispatcher);
     ChangeAddrCommand.register(commandDispatcher);
+    InitAddrCommand.register(commandDispatcher);
   }
 }

@@ -108,24 +108,23 @@ public class LettersMod {
   // from forums https://forums.minecraftforge.net/topic/83420-solved-1152-saving-and-loading-data-per-world/
   @SubscribeEvent
   public void onWorldSaved(WorldEvent.Save event) {
-    if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
-      // TODO temp code, remove this later
-      // code to retrieve world data and store in saver class
-      SavedDataClass addressSaver = new SavedDataClass("worldAddress");
-      SavedDataClass saver = addressSaver.forWorld((ServerWorld) event.getWorld());
-
-      // set up the address we want to save
-      Address newAddress = new Address("24601", "1", "1");
-
-      // write into container
-      CompoundNBT addressData = new CompoundNBT();
-      newAddress.writeToNBT(addressData);
-
-      // save the container of data and mark dirty
-      saver.data = addressData;
-      saver.markDirty();
-      LOGGER.debug("Put my address data in!");
-    }
+//    if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
+//      // code to retrieve world data and store in saver class
+//      SavedDataClass addressSaver = new SavedDataClass("worldAddress");
+//      SavedDataClass saver = addressSaver.forWorld((ServerWorld) event.getWorld());
+//
+//      // set up the address we want to save
+//      Address newAddress = new Address("24601");
+//
+//      // write into container
+//      CompoundNBT addressData = new CompoundNBT();
+//      newAddress.writeToNBT(addressData);
+//
+//      // save the container of data and mark dirty
+//      saver.data = addressData;
+//      saver.markDirty();
+//      LOGGER.debug("Put my address data in!");
+//    }
   }
 
   // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
