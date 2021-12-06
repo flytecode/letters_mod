@@ -14,8 +14,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.server.ServerWorld;
 
-import static net.minecraft.util.math.MathHelper.clamp;
-
 /**
  * Adds a command allowing the player to change the address of this world.
  * They must input the old address of the world as an argument to confirm.
