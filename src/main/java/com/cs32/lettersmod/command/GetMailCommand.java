@@ -50,7 +50,7 @@ public class GetMailCommand {
               ApiClient poster = new ApiClient("http://localhost:4567/getmail");
               JsonObject reqBody = new JsonObject();
               reqBody.addProperty("address", currentAddress);
-              reqBody.addProperty("numParcels", mailboxSlots);
+              reqBody.addProperty("maxNumParcels", mailboxSlots);
               JsonObject reqResult = poster.postFromJson(reqBody);
 
 
