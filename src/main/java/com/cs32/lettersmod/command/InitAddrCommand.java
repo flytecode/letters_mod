@@ -19,6 +19,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
+import org.lwjgl.system.CallbackI;
 
 import static net.minecraft.util.math.MathHelper.clamp;
 
@@ -37,26 +38,33 @@ public class InitAddrCommand {
           // TODO is this client code? If so is this wrong, trying to access the server? this could cause weird bugs possibly.
           ServerWorld world = commandContext.getSource().getWorld();
           if (!world.isRemote()) {
-            // set up apiclient, send a post request to server with old addr
-            ApiClient poster = new ApiClient("http://localhost:4567/initaddr");
-            JsonObject reqBody = new JsonObject();
-            JsonObject reqResult = poster.postFromJson(reqBody);
-
-            // get back the new addr and print it out
-            String newAddr = reqResult.get("newaddr").getAsString();
-            CommandUtils.sendMessage(commandContext, newAddr + " being set as worldAddress");
-
-            // create new class to hold address and write to nbt, save it
-            Address newAddressClass = new Address(newAddr);
-            CompoundNBT newAddrNBT = new CompoundNBT();
-            newAddressClass.writeToNBT(newAddrNBT);
-
-            // save the nbt data in world data
             SavedDataClass addressSaver = new SavedDataClass("worldAddress");
             SavedDataClass saver = addressSaver.forWorld(world);
-            saver.data = newAddrNBT;
-            saver.markDirty();
-            return 1;
+            System.out.println("saver.data: " + saver.data);
+            if (!saver.data.contains("address")) {
+              // set up apiclient, send a post request to server with old addr
+              ApiClient poster = new ApiClient("http://localhost:4567/initaddr");
+              JsonObject reqBody = new JsonObject();
+              JsonObject reqResult = poster.postFromJson(reqBody);
+
+              // get back the new addr and print it out
+              String newAddr = reqResult.get("newaddr").getAsString();
+              CommandUtils.sendMessage(commandContext, newAddr + " being set as worldAddress");
+
+              // create new class to hold address and write to nbt, save it
+              Address newAddressClass = new Address(newAddr);
+              CompoundNBT newAddrNBT = new CompoundNBT();
+              newAddressClass.writeToNBT(newAddrNBT);
+
+              // save the nbt data in world data
+              saver.data = newAddrNBT;
+              saver.markDirty();
+              return 1;
+            } else {
+              // if a mailbox has already been created for this world
+              CommandUtils.sendMessage(commandContext,
+                  "worldAddress has already been set");
+            }
           }
           return 0;
         });

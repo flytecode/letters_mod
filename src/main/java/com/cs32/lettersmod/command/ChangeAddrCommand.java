@@ -40,13 +40,13 @@ public class ChangeAddrCommand {
               if (!world.isRemote()) {
                 SavedDataClass addressSaver = new SavedDataClass("worldAddress");
                 SavedDataClass saver = addressSaver.forWorld(world);
-                if (saver.data.contains("worldAddress")) {
-                  CompoundNBT currentAddress = (CompoundNBT) saver.data.get("worldAddress");
-                  assert currentAddress != null;
+                System.out.println("saver.data: " + saver.data);
+                if (saver.data.contains("address")) {
+                  String currentAddress = saver.data.getString("address");
 
-                  String addressString = currentAddress.getString("address");
+                  System.out.println("currentAddress: " + currentAddress);
 
-                  if (!addressString.equals(oldAddress)) {
+                  if (!currentAddress.equals(oldAddress)) {
                     // incorrect oldaddr, tell the user and don't do anything else
                     CommandUtils.sendMessage(commandContext,
                         "oldaddr does not match current worldAddress.");
