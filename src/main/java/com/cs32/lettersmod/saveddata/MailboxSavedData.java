@@ -23,12 +23,12 @@ public class MailboxSavedData extends WorldSavedData implements Supplier {
 
   @Override
   public void read(CompoundNBT nbt) {
-    data = nbt.getCompound("worldAddress");
+    data = nbt.getCompound("mailboxContents");
   }
 
   @Override
   public CompoundNBT write(CompoundNBT nbt) {
-    nbt.put("worldAddress", data);
+    nbt.put("mailboxContents", data);
     return nbt;
   }
 
