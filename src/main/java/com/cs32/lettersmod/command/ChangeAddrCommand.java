@@ -1,7 +1,6 @@
 package com.cs32.lettersmod.command;
 
 import com.cs32.lettersmod.ApiClient;
-import com.cs32.lettersmod.saveddata.Address;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.CommandDispatcher;
@@ -10,7 +9,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.MessageArgument;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.server.ServerWorld;
 

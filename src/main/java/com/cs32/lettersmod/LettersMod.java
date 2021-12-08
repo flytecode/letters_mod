@@ -1,5 +1,6 @@
 package com.cs32.lettersmod;
 
+import com.cs32.lettersmod.command.RegisterCommandEvent;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
