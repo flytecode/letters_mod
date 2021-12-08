@@ -21,9 +21,4 @@ public class Address {
     return this.address;
   }
 
-
-  public void writeToNBT(CompoundNBT nbt)
-  {
-    nbt.putString("address", this.address);
-  }
 }

@@ -62,13 +62,8 @@ public class ChangeAddrCommand {
                       CommandUtils.sendMessage(commandContext,
                           newAddr + " being set as worldAddress");
 
-                      // create new class to hold address and write to nbt, save it
-                      Address newAddressClass = new Address(newAddr);
-                      CompoundNBT newAddrNBT = new CompoundNBT();
-                      newAddressClass.writeToNBT(newAddrNBT);
-
                       // save the nbt data in world data
-                      saver.data = newAddrNBT;
+                      saver.data.putString("address", newAddr);
                       saver.markDirty();
                       return 1;
                     } catch (IOException e) {
