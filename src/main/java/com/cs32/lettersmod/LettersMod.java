@@ -1,10 +1,8 @@
 package com.cs32.lettersmod;
 
-import com.cs32.lettersmod.saveddata.Address;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -95,8 +93,7 @@ public class LettersMod {
   @SubscribeEvent
   public void onWorldLoaded(WorldEvent.Load event) {
     if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
-      SavedDataClass addressSaver = new SavedDataClass("worldAddress");
-      SavedDataClass saver = addressSaver.forWorld((ServerWorld) event.getWorld());
+      SavedDataClass saver = SavedDataClass.forWorld((ServerWorld) event.getWorld());
 
       if (saver.data.contains("MyData")) {
         LOGGER.debug("Found my data: " + saver.data.get("MyData"));

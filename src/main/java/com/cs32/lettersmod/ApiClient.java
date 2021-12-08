@@ -6,9 +6,11 @@ import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 
@@ -33,7 +35,7 @@ public class ApiClient {
     tURL = targetURL;
   }
 
-  public JsonObject postFromJson(JsonObject jo) {
+  public JsonObject postFromJson(JsonObject jo) throws IOException {
     // make post request to server
     String postRes = this.executePost(jo.toString());
 
@@ -44,7 +46,7 @@ public class ApiClient {
 
   // a "post" request lmao!!! XD
   // urlParameters has to be a stringified json that contains just the body information
-  private String executePost(String urlParameters) {
+  private String executePost(String urlParameters) throws IOException {
     HttpURLConnection connection = null;
 
     try {
@@ -81,9 +83,6 @@ public class ApiClient {
       }
       rd.close();
       return response.toString();
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
     } finally {
       if (connection != null) {
         connection.disconnect();

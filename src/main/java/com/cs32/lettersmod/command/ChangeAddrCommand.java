@@ -14,6 +14,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.server.ServerWorld;
 
+import java.io.IOException;
+
 /**
  * Adds a command allowing the player to change the address of this world.
  * They must input the old address of the world as an argument to confirm.
@@ -36,8 +38,7 @@ public class ChangeAddrCommand {
               // TODO is this client code? If so is this wrong, trying to access the server? this could cause weird bugs possibly.
               ServerWorld world = commandContext.getSource().getWorld();
               if (!world.isRemote()) {
-                SavedDataClass addressSaver = new SavedDataClass("worldAddress");
-                SavedDataClass saver = addressSaver.forWorld(world);
+                SavedDataClass saver = SavedDataClass.forWorld(world);
                 System.out.println("saver.data: " + saver.data);
                 if (saver.data.contains("address")) {
                   String currentAddress = saver.data.getString("address");
@@ -49,26 +50,33 @@ public class ChangeAddrCommand {
                     CommandUtils.sendMessage(commandContext,
                         "oldaddr does not match current worldAddress.");
                   } else {
-                    // set up apiclient, send a post request to server with old addr
-                    ApiClient poster = new ApiClient("http://localhost:4567/changeaddr");
-                    JsonObject reqBody = new JsonObject();
-                    reqBody.addProperty("oldaddr", oldAddress);
-                    JsonObject reqResult = poster.postFromJson(reqBody);
+                    try {
+                      // set up apiclient, send a post request to server with old addr
+                      ApiClient poster = new ApiClient("http://localhost:4567/changeaddr");
+                      JsonObject reqBody = new JsonObject();
+                      reqBody.addProperty("oldaddr", oldAddress);
+                      JsonObject reqResult = poster.postFromJson(reqBody);
 
-                    // get back the new addr and print it out
-                    String newAddr = reqResult.get("newaddr").getAsString();
-                    CommandUtils.sendMessage(commandContext,
-                        newAddr + " being set as worldAddress");
+                      // get back the new addr and print it out
+                      String newAddr = reqResult.get("newaddr").getAsString();
+                      CommandUtils.sendMessage(commandContext,
+                          newAddr + " being set as worldAddress");
 
-                    // create new class to hold address and write to nbt, save it
-                    Address newAddressClass = new Address(newAddr);
-                    CompoundNBT newAddrNBT = new CompoundNBT();
-                    newAddressClass.writeToNBT(newAddrNBT);
+                      // create new class to hold address and write to nbt, save it
+                      Address newAddressClass = new Address(newAddr);
+                      CompoundNBT newAddrNBT = new CompoundNBT();
+                      newAddressClass.writeToNBT(newAddrNBT);
 
-                    // save the nbt data in world data
-                    saver.data = newAddrNBT;
-                    saver.markDirty();
-                    return 1;
+                      // save the nbt data in world data
+                      saver.data = newAddrNBT;
+                      saver.markDirty();
+                      return 1;
+                    } catch (IOException e) {
+                        CommandUtils.sendMessage(commandContext,
+                            "Error connecting to server, please try again.");
+                        e.printStackTrace();
+                        return 0;
+                    }
                   }
                 } else {
                   // if a mailbox has not been created for this world yet

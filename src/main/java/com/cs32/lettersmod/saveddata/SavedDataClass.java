@@ -8,33 +8,40 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 
-// class that puts a CompoundNBT, indicated by nbtKey, in and out of world saved data
+// class that retrieves and stores the current world address
 // from forums https://forums.minecraftforge.net/topic/83420-solved-1152-saving-and-loading-data-per-world/
 public class SavedDataClass extends WorldSavedData implements Supplier {
-  private String nbtKey = "";
   public CompoundNBT data = new CompoundNBT();
 
-  public SavedDataClass(String nbtString) {
+  public SavedDataClass() {
     super(LettersMod.MOD_ID);
-    this.nbtKey = nbtString;
+  }
+
+  public SavedDataClass(String name) {
+    super(name);
   }
 
   @Override
   public void read(CompoundNBT nbt) {
-    data = nbt.getCompound(nbtKey);
+    data = nbt.getCompound("data");
   }
 
   @Override
   public CompoundNBT write(CompoundNBT nbt) {
-    nbt.put(this.nbtKey, data);
+    nbt.put("data", data);
     return nbt;
   }
 
-  public SavedDataClass forWorld(ServerWorld world) {
+  public static SavedDataClass forWorld(ServerWorld world) {
     DimensionSavedDataManager storage = world.getSavedData();
-    Supplier<SavedDataClass> sup = new SavedDataClass(this.nbtKey);
+    Supplier<SavedDataClass> sup = new SavedDataClass();
+    SavedDataClass saver = (SavedDataClass) storage.getOrCreate(sup, LettersMod.MOD_ID);
 
-    return (SavedDataClass) storage.getOrCreate(sup, LettersMod.MOD_ID);
+    if (saver == null) {
+      saver = new SavedDataClass();
+      storage.set(saver);
+    }
+    return saver;
   }
 
   @Override

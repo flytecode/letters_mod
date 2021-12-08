@@ -6,20 +6,12 @@ import com.cs32.lettersmod.saveddata.SavedDataClass;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.MessageArgument;
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ChatType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
-import org.lwjgl.system.CallbackI;
+
+import java.io.IOException;
 
 import static net.minecraft.util.math.MathHelper.clamp;
 
@@ -35,31 +27,36 @@ public class InitAddrCommand {
         = Commands.literal("initaddr")
         .requires((commandSource) -> commandSource.hasPermissionLevel(1))
         .executes(commandContext -> {
-          // TODO is this client code? If so is this wrong, trying to access the server? this could cause weird bugs possibly.
           ServerWorld world = commandContext.getSource().getWorld();
           if (!world.isRemote()) {
-            SavedDataClass addressSaver = new SavedDataClass("worldAddress");
-            SavedDataClass saver = addressSaver.forWorld(world);
+            SavedDataClass saver = SavedDataClass.forWorld(world);
             System.out.println("saver.data: " + saver.data);
             if (!saver.data.contains("address")) {
-              // set up apiclient, send a post request to server with old addr
-              ApiClient poster = new ApiClient("http://localhost:4567/initaddr");
-              JsonObject reqBody = new JsonObject();
-              JsonObject reqResult = poster.postFromJson(reqBody);
+              try {
+                // set up apiclient, send a post request to server with old addr
+                ApiClient poster = new ApiClient("http://localhost:4567/initaddr");
+                JsonObject reqBody = new JsonObject();
+                JsonObject reqResult = poster.postFromJson(reqBody);
 
-              // get back the new addr and print it out
-              String newAddr = reqResult.get("newaddr").getAsString();
-              CommandUtils.sendMessage(commandContext, newAddr + " being set as worldAddress");
+                // get back the new addr and print it out
+                String newAddr = reqResult.get("newaddr").getAsString();
+                CommandUtils.sendMessage(commandContext, newAddr + " being set as worldAddress");
 
-              // create new class to hold address and write to nbt, save it
-              Address newAddressClass = new Address(newAddr);
-              CompoundNBT newAddrNBT = new CompoundNBT();
-              newAddressClass.writeToNBT(newAddrNBT);
+                // create new class to hold address and write to nbt, save it
+                Address newAddressClass = new Address(newAddr);
+                CompoundNBT newAddrNBT = new CompoundNBT();
+                newAddressClass.writeToNBT(newAddrNBT);
 
-              // save the nbt data in world data
-              saver.data = newAddrNBT;
-              saver.markDirty();
-              return 1;
+                // save the nbt data in world data
+                saver.data = newAddrNBT;
+                saver.markDirty();
+                return 1;
+              } catch (IOException e) {
+                CommandUtils.sendMessage(commandContext,
+                    "Error connecting to server, please try again.");
+                e.printStackTrace();
+                return 0;
+              }
             } else {
               // if a mailbox has already been created for this world
               CommandUtils.sendMessage(commandContext,
