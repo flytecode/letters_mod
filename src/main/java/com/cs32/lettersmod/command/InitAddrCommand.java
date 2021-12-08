@@ -13,7 +13,6 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.io.IOException;
 
-import static net.minecraft.util.math.MathHelper.clamp;
 
 /**
  * Adds a command allowing the player to change the address of this world.
