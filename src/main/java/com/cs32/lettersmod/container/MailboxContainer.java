@@ -73,6 +73,8 @@ public class MailboxContainer extends Container {
     addSlotRange(playerInventory, 0, leftCol, topRow, 9, 18);
   }
 
+
+  // TODO: THIS IS THE CODE THAT HANDLES SHIFT-CLICKING INTO INVENTORY, LOOK HERE TO FIGURE OUT WHERE TO ADD LOGIC TO REMOVE FROM parcelList
   // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
   // must assign a slot number to each of the slots used by the GUI.
   // For this container, we can see both the tile inventory's slots as well as the player inventory slots and the hotbar.

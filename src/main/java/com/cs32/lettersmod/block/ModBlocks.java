@@ -1,14 +1,13 @@
 package com.cs32.lettersmod.block;
 
 import com.cs32.lettersmod.LettersMod;
+import com.cs32.lettersmod.block.custom.MailboxBlock;
 import com.cs32.lettersmod.item.ModItemGroup;
 import com.cs32.lettersmod.item.ModItems;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.potion.Effects;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;

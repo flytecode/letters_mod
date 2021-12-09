@@ -5,9 +5,11 @@ import com.cs32.lettersmod.command.RegisterCommandEvent;
 import com.cs32.lettersmod.container.ModContainers;
 import com.cs32.lettersmod.item.ModItems;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
+import com.cs32.lettersmod.screen.MailboxScreen;
 import com.cs32.lettersmod.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -67,6 +69,12 @@ public class LettersMod {
   private void doClientStuff(final FMLClientSetupEvent event) {
     // do something that can only be done on the client
 //        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
+    event.enqueueWork(() -> {
+          ScreenManager.registerFactory(ModContainers.MAILBOX_CONTAINER.get(), MailboxScreen::new);
+
+        }
+
+    );
   }
 
   private void enqueueIMC(final InterModEnqueueEvent event) {

@@ -49,6 +49,7 @@ public class MailboxTile extends TileEntity {
         markDirty();
       }
 
+      // TODO make this so that if it's a receiving slot always false, if it's a sending slot true only for parcels and stamps
       @Override
       public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         switch (slot) {
@@ -60,6 +61,7 @@ public class MailboxTile extends TileEntity {
         }
       }
 
+      // TODO here, for the send pane, we want to add logic to only allow 1 stamp and one parcel
       @Override
       public int getSlotLimit(int slot) {
         return 1;
@@ -77,6 +79,7 @@ public class MailboxTile extends TileEntity {
     };
   }
 
+  //TODO remove, don't think we need this it's for being able to make hoppers feed in
   @Nonnull
   @Override
   public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
