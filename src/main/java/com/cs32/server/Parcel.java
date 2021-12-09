@@ -5,7 +5,7 @@ package com.cs32.server;
  */
 public class Parcel {
 
-  private final String id;
+  private final Integer id;
   private String recipient;
   private String sender;
   private String downloaded;
@@ -19,7 +19,7 @@ public class Parcel {
    * @param downloaded - True if the parcel has been downloaded into the game, else false.
    * @param parcel - The JSON data for the item(s) sent.
    */
-  public Parcel(String id, String recipient, String sender, String downloaded, String parcel) {
+  public Parcel(Integer id, String recipient, String sender, String downloaded, String parcel) {
     this.id = id;
     this.recipient = recipient;
     this.sender = sender;
@@ -27,7 +27,7 @@ public class Parcel {
     this.parcel = parcel;
   }
 
-  public String getId() {
+  public Integer getId() {
     return this.id;
   }
 
@@ -53,6 +53,5 @@ public class Parcel {
   public String getParcel() {
     return this.parcel;
   }
-
 
 }
