@@ -1,7 +1,11 @@
 package com.cs32.lettersmod;
 
+import com.cs32.lettersmod.block.ModBlocks;
 import com.cs32.lettersmod.command.RegisterCommandEvent;
+import com.cs32.lettersmod.container.ModContainers;
+import com.cs32.lettersmod.item.ModItems;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
+import com.cs32.lettersmod.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.server.ServerWorld;
@@ -45,7 +49,10 @@ public class LettersMod {
     eventBus.addListener(this::doClientStuff);
 
     // Register our items class
-    LettersItems.register(eventBus);
+    ModItems.register(eventBus);
+    ModBlocks.register(eventBus);
+    ModTileEntities.register(eventBus);
+    ModContainers.register(eventBus);
 
     // Register ourselves for server and other game events we are interested in
     MinecraftForge.EVENT_BUS.register(this);
