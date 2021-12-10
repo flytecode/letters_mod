@@ -59,7 +59,7 @@ public class GetMailCommand {
 
                       try {
                         // set up apiclient, send a post request to server with old addr
-                        ApiClient poster = new ApiClient("http://localhost:4567/getmail");
+                        ApiClient poster = new ApiClient("https://serene-bayou-00030.herokuapp.com/getmail");
                         JsonObject reqBody = new JsonObject();
                         reqBody.addProperty("address", currentAddress);
                         reqBody.addProperty("maxNumParcels", mailboxSlots);

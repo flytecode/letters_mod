@@ -33,7 +33,6 @@ public class ChangeAddrCommand {
               String oldAddress = iTextComponent.getString();
 
               // code that loads up value for current address and makes sure it is equal to inputted oldaddr
-              // TODO is this client code? If so is this wrong, trying to access the server? this could cause weird bugs possibly.
               ServerWorld world = commandContext.getSource().getWorld();
               if (!world.isRemote()) {
                 SavedDataClass saver = SavedDataClass.forWorld(world);
@@ -50,7 +49,7 @@ public class ChangeAddrCommand {
                   } else {
                     try {
                       // set up apiclient, send a post request to server with old addr
-                      ApiClient poster = new ApiClient("http://localhost:4567/changeaddr");
+                      ApiClient poster = new ApiClient("https://serene-bayou-00030.herokuapp.com/changeaddr"); // http://localhost:4567/changeaddr
                       JsonObject reqBody = new JsonObject();
                       reqBody.addProperty("oldaddr", oldAddress);
                       JsonObject reqResult = poster.postFromJson(reqBody);

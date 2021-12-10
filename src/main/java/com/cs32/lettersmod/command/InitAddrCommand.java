@@ -33,7 +33,7 @@ public class InitAddrCommand {
             if (!saver.data.contains("address")) {
               try {
                 // set up apiclient, send a post request to server with old addr
-                ApiClient poster = new ApiClient("http://localhost:4567/initaddr");
+                ApiClient poster = new ApiClient("https://serene-bayou-00030.herokuapp.com/initaddr");
                 JsonObject reqBody = new JsonObject();
                 JsonObject reqResult = poster.postFromJson(reqBody);
 

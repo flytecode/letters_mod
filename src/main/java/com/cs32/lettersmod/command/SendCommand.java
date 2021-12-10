@@ -46,7 +46,7 @@ public class SendCommand {
 
                               try {
                                 // set up apiclient, send a post request to server with old addr
-                                ApiClient poster = new ApiClient("http://localhost:4567/send");
+                                ApiClient poster = new ApiClient("https://serene-bayou-00030.herokuapp.com/send");
                                 JsonObject reqBody = new JsonObject();
                                 reqBody.addProperty("sender", currentAddress);
                                 reqBody.addProperty("recipient", parcelString);
