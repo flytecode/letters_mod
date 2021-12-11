@@ -2,6 +2,8 @@ package com.cs32.lettersmod.block.custom;
 
 
 import com.cs32.lettersmod.container.MailboxContainer;
+import com.cs32.lettersmod.courier.MailCourier;
+import com.cs32.lettersmod.saveddata.SavedDataClass;
 import com.cs32.lettersmod.tileentity.MailboxTile;
 import com.cs32.lettersmod.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
@@ -38,6 +40,10 @@ public class MailboxBlock extends Block {
                                            PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
     if(!worldIn.isRemote()) {
       TileEntity tileEntity = worldIn.getTileEntity(pos);
+
+      //TODO this is the type of place where you would call the MailCourier methods, need to do in interface
+      SavedDataClass saver = SavedDataClass.forWorld((ServerWorld) worldIn);
+      String resultString = MailCourier.getMail(saver, 1);
 
       if(!player.isCrouching()) {
         if(tileEntity instanceof MailboxTile) {

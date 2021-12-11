@@ -1,6 +1,7 @@
 package com.cs32.lettersmod.command;
 
 import com.cs32.lettersmod.ApiClient;
+import com.cs32.lettersmod.courier.MailCourier;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.CommandDispatcher;
@@ -35,46 +36,12 @@ public class ChangeAddrCommand {
               // code that loads up value for current address and makes sure it is equal to inputted oldaddr
               ServerWorld world = commandContext.getSource().getWorld();
               if (!world.isRemote()) {
+                // get data for world
                 SavedDataClass saver = SavedDataClass.forWorld(world);
-                System.out.println("saver.data: " + saver.data);
-                if (saver.data.contains("address")) {
-                  String currentAddress = saver.data.getString("address");
 
-                  System.out.println("currentAddress: " + currentAddress);
-
-                  if (!currentAddress.equals(oldAddress)) {
-                    // incorrect oldaddr, tell the user and don't do anything else
-                    CommandUtils.sendMessage(commandContext,
-                        "oldaddr does not match current worldAddress.");
-                  } else {
-                    try {
-                      // set up apiclient, send a post request to server with old addr
-                      ApiClient poster = new ApiClient("https://serene-bayou-00030.herokuapp.com/changeaddr"); // http://localhost:4567/changeaddr
-                      JsonObject reqBody = new JsonObject();
-                      reqBody.addProperty("oldaddr", oldAddress);
-                      JsonObject reqResult = poster.postFromJson(reqBody);
-
-                      // get back the new addr and print it out
-                      String newAddr = reqResult.get("newaddr").getAsString();
-                      CommandUtils.sendMessage(commandContext,
-                          newAddr + " being set as worldAddress");
-
-                      // save the nbt data in world data
-                      saver.data.putString("address", newAddr);
-                      saver.markDirty();
-                      return 1;
-                    } catch (IOException e) {
-                        CommandUtils.sendMessage(commandContext,
-                            "Error connecting to server, please try again.");
-                        e.printStackTrace();
-                        return 0;
-                    }
-                  }
-                } else {
-                  // if a mailbox has not been created for this world yet
-                  CommandUtils.sendMessage(commandContext,
-                      "worldAddress has not yet been set, please create a mailbox for this world.");
-                }
+                // call change addr functionality
+                String resultString = MailCourier.changeAddr(saver, oldAddress);
+                CommandUtils.sendMessage(commandContext, resultString);
               }
               return 0;
             })
