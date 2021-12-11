@@ -15,13 +15,13 @@ public class ModContainers {
   public static DeferredRegister<ContainerType<?>> CONTAINERS
       = DeferredRegister.create(ForgeRegistries.CONTAINERS, LettersMod.MOD_ID);
 
-  public static final RegistryObject<ContainerType<MailboxContainer>> MAILBOX_CONTAINER
-      = CONTAINERS.register("mailbox_container",
-      () -> IForgeContainerType.create(((windowId, inv, data) -> {
-        BlockPos pos = data.readBlockPos();
-        World world = inv.player.getEntityWorld();
-        return new MailboxContainer(windowId, world, pos, inv, inv.player);
-      })));
+//  public static final RegistryObject<ContainerType<MailboxContainer>> MAILBOX_CONTAINER
+//      = CONTAINERS.register("mailbox_container",
+//      () -> IForgeContainerType.create(((windowId, inv, data) -> {
+//        BlockPos pos = data.readBlockPos();
+//        World world = inv.player.getEntityWorld();
+//        return new MailboxContainer(windowId, world, pos, inv, inv.player);
+//      })));
 
 
   public static void register(IEventBus eventBus) {

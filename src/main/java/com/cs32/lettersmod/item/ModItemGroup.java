@@ -7,7 +7,7 @@ public class ModItemGroup {
   public static final ItemGroup LETTERS_GROUP = new ItemGroup("lettersModTab") {
     @Override
     public ItemStack createIcon() {
-      return new ItemStack(ModItems.AMETHYST.get());
+      return new ItemStack(ModItems.ENVELOPE.get());
     }
   };
 

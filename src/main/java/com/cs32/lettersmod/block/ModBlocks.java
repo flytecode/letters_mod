@@ -1,7 +1,7 @@
 package com.cs32.lettersmod.block;
 
 import com.cs32.lettersmod.LettersMod;
-import com.cs32.lettersmod.block.custom.MailboxBlock;
+//import com.cs32.lettersmod.block.custom.MailboxBlock;
 import com.cs32.lettersmod.item.ModItemGroup;
 import com.cs32.lettersmod.item.ModItems;
 import net.minecraft.block.*;
@@ -20,8 +20,8 @@ public class ModBlocks {
   public static final DeferredRegister<Block> BLOCKS
       = DeferredRegister.create(ForgeRegistries.BLOCKS, LettersMod.MOD_ID);
 
-  public static final RegistryObject<Block> MAILBOX = registerBlock("mailbox",
-      () -> new MailboxBlock(AbstractBlock.Properties.create(Material.WOOD)));
+//  public static final RegistryObject<Block> MAILBOX = registerBlock("mailbox",
+//      () -> new MailboxBlock(AbstractBlock.Properties.create(Material.WOOD)));
 
 
   private static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block) {

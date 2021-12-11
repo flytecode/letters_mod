@@ -1,11 +1,11 @@
 package com.cs32.lettersmod;
 
 import com.cs32.lettersmod.block.ModBlocks;
-import com.cs32.lettersmod.command.RegisterCommandEvent;
+import com.cs32.lettersmod.network.command.RegisterCommandEvent;
 import com.cs32.lettersmod.container.ModContainers;
 import com.cs32.lettersmod.item.ModItems;
-import com.cs32.lettersmod.saveddata.SavedDataClass;
-import com.cs32.lettersmod.screen.MailboxScreen;
+import com.cs32.lettersmod.network.saveddata.SavedDataClass;
+//import com.cs32.lettersmod.screen.MailboxScreen;
 import com.cs32.lettersmod.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -48,7 +48,7 @@ public class LettersMod {
     // Register the processIMC method for modloading
     eventBus.addListener(this::processIMC);
     // Register the doClientStuff method for modloading
-    eventBus.addListener(this::doClientStuff);
+//    eventBus.addListener(this::doClientStuff);
 
     // Register our items class
     ModItems.register(eventBus);
@@ -66,16 +66,16 @@ public class LettersMod {
     LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
   }
 
-  private void doClientStuff(final FMLClientSetupEvent event) {
-    // do something that can only be done on the client
-//        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
-    event.enqueueWork(() -> {
-          ScreenManager.registerFactory(ModContainers.MAILBOX_CONTAINER.get(), MailboxScreen::new);
-
-        }
-
-    );
-  }
+//  private void doClientStuff(final FMLClientSetupEvent event) {
+//    // do something that can only be done on the client
+////        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
+//    event.enqueueWork(() -> {
+//          ScreenManager.registerFactory(ModContainers.MAILBOX_CONTAINER.get(), MailboxScreen::new);
+//
+//        }
+//
+//    );
+//  }
 
   private void enqueueIMC(final InterModEnqueueEvent event) {
     // some example code to dispatch IMC to another mod
