@@ -31,15 +31,11 @@ public class CollectionBoxContainer extends Container {
 
     if(tileEntity != null) {
       tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-        addSlot(new SlotItemHandler(h, 0, 80, 31));
-        addSlot(new SlotItemHandler(h, 1, 80, 53));
+        addSlot(new SlotItemHandler(h, 0, 18, 26));
       });
     }
   }
 
-  public boolean isLightningStorm() {
-    return tileEntity.getWorld().isThundering();
-  }
 
   @Override
   public boolean canInteractWith(PlayerEntity playerIn) {
@@ -75,7 +71,6 @@ public class CollectionBoxContainer extends Container {
   }
 
 
-  // TODO: THIS IS THE CODE THAT HANDLES SHIFT-CLICKING INTO INVENTORY, LOOK HERE TO FIGURE OUT WHERE TO ADD LOGIC TO REMOVE FROM parcelList
   // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
   // must assign a slot number to each of the slots used by the GUI.
   // For this container, we can see both the tile inventory's slots as well as the player inventory slots and the hotbar.

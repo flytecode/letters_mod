@@ -5,5 +5,6 @@
   "screen.lettersmod.mailbox" : "Mailbox",
 
   "block.lettersmod.collection_box" : "Collection Box",
-  "screen.lettersmod.collection_box" : "Collection Box"
+  "screen.lettersmod.collection_box" : "Collection Box",
+  "collectionBox.sendButton" : "Send"
 }
