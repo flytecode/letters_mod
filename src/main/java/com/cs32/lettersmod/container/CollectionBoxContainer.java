@@ -1,24 +1,33 @@
 package com.cs32.lettersmod.container;
 
 import com.cs32.lettersmod.block.ModBlocks;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 public class CollectionBoxContainer extends Container {
   private final TileEntity tileEntity;
   private final PlayerEntity playerEntity;
   private final IItemHandler playerInventory;
+  private String sendAddress;
 
   public CollectionBoxContainer(int windowId, World world, BlockPos pos,
                           PlayerInventory playerInventory, PlayerEntity player) {
@@ -35,10 +44,6 @@ public class CollectionBoxContainer extends Container {
         addSlot(new SlotItemHandler(h, 1, 80, 53));
       });
     }
-  }
-
-  public boolean isLightningStorm() {
-    return tileEntity.getWorld().isThundering();
   }
 
   @Override
@@ -125,5 +130,25 @@ public class CollectionBoxContainer extends Container {
     }
     sourceSlot.onTake(playerEntity, sourceStack);
     return copyOfSourceStack;
+  }
+
+  // taken from RepairContainer.java but stripped down
+  public void updateRepairOutput() {
+
+  }
+
+  // taken from RepairContainer.java to get to compile, except we rename repairedItemName -> sendAddress
+  public void updateItemName(String newName) {
+    this.sendAddress = newName;
+    if (this.getSlot(2).getHasStack()) {
+      ItemStack itemstack = this.getSlot(2).getStack();
+      if (StringUtils.isBlank(newName)) {
+        itemstack.clearCustomName();
+      } else {
+        itemstack.setDisplayName(new StringTextComponent(this.sendAddress));
+      }
+    }
+
+    this.updateRepairOutput();
   }
 }
