@@ -32,16 +32,23 @@ public class CollectionBoxScreen extends ContainerScreen<CollectionBoxContainer>
   }
 
   protected void init() {
+    int i = (this.width - this.xSize) / 2;
+    int j = (this.height - this.ySize) / 2;
+
     this.minecraft.keyboardListener.enableRepeatEvents(true);
-    this.textFieldAddress = new TextFieldWidget(this.font, this.width / 2 - 100, 66, 200, 20, new TranslationTextComponent("addServer.enterName"));
-    this.textFieldAddress.setFocused2(true);
-    this.textFieldAddress.setText(this.sendAddress);
+    this.textFieldAddress = new TextFieldWidget(this.font, i + 62, j + 24, 103, 12, new TranslationTextComponent("addServer.enterName"));
+    this.textFieldAddress.setCanLoseFocus(false);
+    this.textFieldAddress.setTextColor(-1);
+    this.textFieldAddress.setDisabledTextColour(-1);
+    this.textFieldAddress.setEnableBackgroundDrawing(false);
+    this.textFieldAddress.setMaxStringLength(35);
     this.textFieldAddress.setResponder(this::textFieldResponder);
     this.children.add(this.textFieldAddress);
+    this.setFocusedDefault(this.textFieldAddress);
 
-    this.sendButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20, new TranslationTextComponent("collectionBox.sendButton"), (input) -> {
-      this.onButtonServerAddPressed();
-    }));
+//    this.sendButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20, new TranslationTextComponent("collectionBox.sendButton"), (input) -> {
+//      this.onButtonServerAddPressed();
+//    }));
   }
 
   private void textFieldResponder(String s) { // don't actually use s, just to make compiler happy
