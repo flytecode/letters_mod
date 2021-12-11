@@ -18,6 +18,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -76,7 +77,7 @@ public class CollectionBoxBlock extends Block {
       @Nullable
       @Override
       public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new CollectionBoxContainer(i, worldIn, pos, playerInventory, playerEntity);
+        return new CollectionBoxContainer(i, playerInventory, IWorldPosCallable.of(worldIn, pos));
       }
     };
   }

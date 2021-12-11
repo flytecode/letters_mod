@@ -2,6 +2,7 @@ package com.cs32.lettersmod.container;
 
 import com.cs32.lettersmod.LettersMod;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -28,7 +29,9 @@ public class ModContainers {
       () -> IForgeContainerType.create(((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntityWorld();
-        return new CollectionBoxContainer(windowId, world, pos, inv, inv.player);
+
+        return new CollectionBoxContainer(windowId, inv, IWorldPosCallable.of(world, pos));
+//        return new CollectionBoxContainer(windowId, world, pos, inv, inv.player);
       })));
 
 
