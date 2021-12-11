@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "tutorialmod:block/mailbox"
+    "all": "lettersmod:block/mailbox"
   }
 }

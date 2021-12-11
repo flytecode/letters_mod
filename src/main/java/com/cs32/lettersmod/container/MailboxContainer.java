@@ -28,6 +28,7 @@ public class MailboxContainer extends Container {
     this.playerInventory = new InvWrapper(playerInventory);
     layoutPlayerInventorySlots(8, 86);
 
+
     if(tileEntity != null) {
       tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
         addSlot(new SlotItemHandler(h, 0, 80, 31));

@@ -11,7 +11,7 @@ import net.minecraft.util.text.ITextComponent;
 
 public class MailboxScreen extends ContainerScreen<MailboxContainer> {
   private final ResourceLocation GUI = new ResourceLocation(LettersMod.MOD_ID,
-      "textures/gui/mailbox_gui.png");
+      "textures/gui/mailbox.png");
 
   public MailboxScreen(MailboxContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);

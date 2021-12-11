@@ -5,6 +5,7 @@ import com.cs32.lettersmod.command.RegisterCommandEvent;
 import com.cs32.lettersmod.container.ModContainers;
 import com.cs32.lettersmod.item.ModItems;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
+import com.cs32.lettersmod.screen.CollectionBoxScreen;
 import com.cs32.lettersmod.screen.MailboxScreen;
 import com.cs32.lettersmod.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
@@ -71,6 +72,7 @@ public class LettersMod {
 //        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
     event.enqueueWork(() -> {
           ScreenManager.registerFactory(ModContainers.MAILBOX_CONTAINER.get(), MailboxScreen::new);
+          ScreenManager.registerFactory(ModContainers.COLLECTION_BOX_CONTAINER.get(), CollectionBoxScreen::new);
 
         }
 

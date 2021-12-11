@@ -1,5 +1,9 @@
 {
   "item.lettersmod.amethyst" : "Amethyst",
+
   "block.lettersmod.mailbox" : "Mailbox",
-  "screen.lettersmod.mailbox" : "Mailbox"
+  "screen.lettersmod.mailbox" : "Mailbox",
+
+  "block.lettersmod.collection_box" : "Collection Box",
+  "screen.lettersmod.collection_box" : "Collection Box"
 }

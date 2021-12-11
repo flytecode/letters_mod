@@ -23,6 +23,14 @@ public class ModContainers {
         return new MailboxContainer(windowId, world, pos, inv, inv.player);
       })));
 
+  public static final RegistryObject<ContainerType<CollectionBoxContainer>> COLLECTION_BOX_CONTAINER
+      = CONTAINERS.register("collection_box_container",
+      () -> IForgeContainerType.create(((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntityWorld();
+        return new CollectionBoxContainer(windowId, world, pos, inv, inv.player);
+      })));
+
 
   public static void register(IEventBus eventBus) {
     CONTAINERS.register(eventBus);
