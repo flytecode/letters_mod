@@ -1,6 +1,7 @@
 package com.cs32.lettersmod.item;
 
 import com.cs32.lettersmod.LettersMod;
+import com.cs32.lettersmod.item.custom.CustomItem;
 import com.cs32.lettersmod.item.custom.Envelope;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -12,15 +13,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class ModItems {
   public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, LettersMod.MOD_ID);
 
-  // empty envelope item
-  public static final RegistryObject<Item> ENVELOPE = ITEMS.register("envelope",
-          () -> new Envelope(new Item.Properties().group(ModItemGroup.LETTERS_GROUP)));
+  public static final Envelope ENVELOPE_OPEN = new Envelope("envelope_open", true);
+  public static final Envelope ENVELOPE_CLOSED = new Envelope("envelope_closed", false);
+  public static final CustomItem STAMP = new CustomItem("stamp");
 
-//  // sealed envelope item
-//  public static final RegistryObject<Item> SEALED_ENVELOPE = ITEMS.register("sealed_envelope",
-//          () -> new Item(new Item.Properties().group(ItemGroup.MATERIALS)));
-
-  public static void register(IEventBus eventBus) {
-    ITEMS.register(eventBus);
-  }
 }

@@ -1,6 +1,7 @@
 package com.cs32.lettersmod;
 
 import com.cs32.lettersmod.block.ModBlocks;
+import com.cs32.lettersmod.container.screen.EnvelopeScreen;
 import com.cs32.lettersmod.network.command.RegisterCommandEvent;
 import com.cs32.lettersmod.container.ModContainers;
 import com.cs32.lettersmod.item.ModItems;
@@ -10,54 +11,75 @@ import com.cs32.lettersmod.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.stream.Collectors;
 
+
+@Mod.EventBusSubscriber(modid = LettersMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(LettersMod.MOD_ID)
 public class LettersMod {
   // define mod id for project
   public static final String MOD_ID = "lettersmod";
 
+  public static ItemGroup ITEM_GROUP = new ItemGroup(MOD_ID) {
+    @Override
+    public ItemStack createIcon() {
+      return new ItemStack(ModItems.ENVELOPE_CLOSED);
+    }
+  };
+
   // Directly reference a log4j logger.
   private static final Logger LOGGER = LogManager.getLogger();
 
   public LettersMod() {
-    IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configuration.initSpec());
+  }
 
-    // Register the setup method for modloading
-    eventBus.addListener(this::setup);
-    // Register the enqueueIMC method for modloading
-    eventBus.addListener(this::enqueueIMC);
-    // Register the processIMC method for modloading
-    eventBus.addListener(this::processIMC);
-    // Register the doClientStuff method for modloading
-//    eventBus.addListener(this::doClientStuff);
+  @SubscribeEvent
+  public static void loadComplete(final FMLLoadCompleteEvent event) {
+  }
+//
+//  @SubscribeEvent
+//  public static void clientSetup(final FMLClientSetupEvent event) {
+//    ScreenManager.registerFactory(ModContainers.ENVELOPE, EnvelopeScreen::new);
+//    LOGGER.debug("Screens Registered");
+//  }
 
-    // Register our items class
-    ModItems.register(eventBus);
-    ModBlocks.register(eventBus);
-    ModTileEntities.register(eventBus);
-    ModContainers.register(eventBus);
-
-    // Register ourselves for server and other game events we are interested in
-    MinecraftForge.EVENT_BUS.register(this);
+  @SubscribeEvent
+  public static void registerItems(final RegistryEvent.Register<Item> event) {
+    event.getRegistry().registerAll(
+        ModItems.STAMP,
+        ModItems.ENVELOPE_OPEN,
+        ModItems.ENVELOPE_CLOSED);
   }
 
   private void setup(final FMLCommonSetupEvent event) {
@@ -65,17 +87,6 @@ public class LettersMod {
     LOGGER.info("HELLO FROM PREINIT");
     LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
   }
-
-//  private void doClientStuff(final FMLClientSetupEvent event) {
-//    // do something that can only be done on the client
-////        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
-//    event.enqueueWork(() -> {
-//          ScreenManager.registerFactory(ModContainers.MAILBOX_CONTAINER.get(), MailboxScreen::new);
-//
-//        }
-//
-//    );
-//  }
 
   private void enqueueIMC(final InterModEnqueueEvent event) {
     // some example code to dispatch IMC to another mod
@@ -153,6 +164,29 @@ public class LettersMod {
     @SubscribeEvent
     public static void onCommonSetupEvent(FMLCommonSetupEvent event) {
       MinecraftForge.EVENT_BUS.register(RegisterCommandEvent.class);
+    }
+  }
+  public static class Configuration {
+    public static ForgeConfigSpec SPEC = null;
+    protected static Configuration INSTANCE = null;
+
+    public static Configuration get() {
+      return INSTANCE;
+    }
+
+    public static ForgeConfigSpec initSpec() {
+      final Pair<Configuration, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Configuration::new);
+      SPEC = specPair.getRight();
+      INSTANCE = specPair.getLeft();
+      return specPair.getRight();
+    }
+
+    public final ForgeConfigSpec.BooleanValue LOCK_BOXES;
+    public final ForgeConfigSpec.BooleanValue PROTECT_BOX_DESTROY;
+
+    protected Configuration(ForgeConfigSpec.Builder builder) {
+      LOCK_BOXES = builder.comment("Block snailboxes from being opened by non-owners").define("lock_boxes", true);
+      PROTECT_BOX_DESTROY = builder.comment("Protect snailboxes from being destroyed by non-owners").define("protect_box_destroy", true);
     }
   }
 }

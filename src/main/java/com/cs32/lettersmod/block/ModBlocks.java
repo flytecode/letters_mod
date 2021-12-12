@@ -2,7 +2,6 @@ package com.cs32.lettersmod.block;
 
 import com.cs32.lettersmod.LettersMod;
 //import com.cs32.lettersmod.block.custom.MailboxBlock;
-import com.cs32.lettersmod.item.ModItemGroup;
 import com.cs32.lettersmod.item.ModItems;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -32,7 +31,7 @@ public class ModBlocks {
 
   private static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
     ModItems.ITEMS.register(name, () -> new BlockItem(block.get(),
-        new Item.Properties().group(ModItemGroup.LETTERS_GROUP)));
+        new Item.Properties().group(LettersMod.ITEM_GROUP)));
   }
 
   public static void register(IEventBus eventBus) {
