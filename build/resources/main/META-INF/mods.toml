@@ -1,4 +1,4 @@
-# This is prototype of our Mailbox mod. It contains the data relating to the loading mods.
+# This is prototype of our Letters mod. It contains the data relating to the loading mods.
 # There are several mandatory fields (#mandatory), and many more that are optional (#optional).
 # The overall format is standard TOML format, v0.5.0.
 # Note that there are a couple of TOML lists in this file.
@@ -34,11 +34,10 @@ credits="Thanks for this example mod goes to Java" #optional
 authors="Sheridan, Kat, Andy, Olena, Lucas, and Futen" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-This is a long form description of the mod. You can write whatever you want here
+This is our prototype for our Letters Mod. We have a Drop Box (which is where you can send letters --
+ie. x64 sand) to someone using their Mailbox address. In your Mailbox, you can refresh and easily access the
+gifts sent to you from your friends!
 
-Have some lorem ipsum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis lacinia magna. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed sagittis luctus odio eu tempus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque volutpat ligula eget lacus auctor sagittis. In hac habitasse platea dictumst. Nunc gravida elit vitae sem vehicula efficitur. Donec mattis ipsum et arcu lobortis, eleifend sagittis sem rutrum. Cras pharetra quam eget posuere fermentum. Sed id tincidunt justo. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.lettersmod]] #optional
