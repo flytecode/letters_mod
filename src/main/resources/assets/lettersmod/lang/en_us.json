@@ -3,8 +3,9 @@
 
   "block.lettersmod.mailbox" : "Mailbox",
   "screen.lettersmod.mailbox" : "Mailbox",
+  "mailBox.refreshButton": "Refresh",
 
-  "block.lettersmod.collection_box" : "Collection Box",
-  "screen.lettersmod.collection_box" : "Collection Box",
+  "block.lettersmod.collection_box" : "Drop Box",
+  "screen.lettersmod.collection_box" : "Drop Box",
   "collectionBox.sendButton" : "Send"
 }

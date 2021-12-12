@@ -5,16 +5,31 @@ import com.cs32.lettersmod.container.MailboxContainer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class MailboxScreen extends ContainerScreen<MailboxContainer> {
   private final ResourceLocation GUI = new ResourceLocation(LettersMod.MOD_ID,
       "textures/gui/mailbox.png");
 
+  private Button refreshButton;
+
   public MailboxScreen(MailboxContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
+  }
+
+  @Override
+  // button for refreshing our mailbox
+  protected void init() {
+    super.init();
+    int i = this.guiLeft;
+    int j = this.guiTop;
+    this.refreshButton = this.addButton(new Button(i + 95, j + 3, 70, 13, new TranslationTextComponent("mailBox.refreshButton"), (p_214318_1_) -> {
+      System.out.println("REFRESHBUTTON");
+    }));
   }
 
   @Override

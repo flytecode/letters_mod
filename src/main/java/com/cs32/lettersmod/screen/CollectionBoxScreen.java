@@ -22,6 +22,7 @@ public class CollectionBoxScreen extends ContainerScreen<CollectionBoxContainer>
   }
 
   @Override
+  // button for sending mail
   protected void init() {
     super.init();
     int i = this.guiLeft;
