@@ -9,26 +9,22 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-public class SendParcelPacket {
-  private String address;
-  private String parcelString;
+public class GetMailPacket {
+  private int mailboxSlots;
 
-  public SendParcelPacket() {
+  public GetMailPacket() {
   }
 
-  public SendParcelPacket(String address, String parcelString) {
-    this.address = address;
-    this.parcelString = parcelString;
+  public GetMailPacket(int mailboxSlots) {
+    this.mailboxSlots = mailboxSlots;
   }
 
-  public SendParcelPacket(PacketBuffer buf) {
-    address = buf.readString(500); //TODO make this a macro
-    parcelString = buf.readString(500);
+  public GetMailPacket(PacketBuffer buf) {
+    this.mailboxSlots = buf.readInt();
   }
 
   public void toBytes(PacketBuffer buf) {
-    buf.writeString(address);
-    buf.writeString(parcelString);
+    buf.writeInt(mailboxSlots);
   }
 
   public void handle(Supplier<NetworkEvent.Context> ctx) {
@@ -38,8 +34,8 @@ public class SendParcelPacket {
       if (!world.isRemote()) {
         SavedDataClass saver = SavedDataClass.forWorld((ServerWorld) world);
 
-        String res = MailCourier.send(saver, address, parcelString);
-        System.out.println("sendparcelpacket: " + res);
+        String res = MailCourier.getMail(saver, mailboxSlots);
+        System.out.println("GetMailPacket: " + res);
       }
 
     });

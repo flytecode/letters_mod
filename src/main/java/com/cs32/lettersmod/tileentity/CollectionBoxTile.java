@@ -21,6 +21,8 @@ import javax.annotation.Nullable;
 
 public class CollectionBoxTile extends TileEntity {
 
+  // TODO fix bug with shift-click, fix item reappearing after you send
+
   private final ItemStackHandler itemHandler = createHandler();
   private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 

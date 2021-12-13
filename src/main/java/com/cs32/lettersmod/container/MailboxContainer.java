@@ -15,6 +15,26 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+/*
+Mailbox Receiving Screen
+** need to make it show "My address: 123456"
+** need to make it so that players cannot put things into mailbox inventory, only take items out
+
+on mailbox being opened:
+- refreshMailView() to replace contents of mailbox with whatever's in parcelList
+
+on refresh button being pressed:
+- getMail() to do /getmail command and update parcelList
+- if successful: refreshMailView() to replace contents of mailbox
+- if not successful: message in GUI "could not connect"
+
+on item being removed:
+- delete that item from the parcelList
+OR on mailbox being closed/exited:
+- replace parcelList with contents of mailbox now that they've removed everything
+ */
+
+
 public class MailboxContainer extends Container {
   private final TileEntity tileEntity;
   private final PlayerEntity playerEntity;
@@ -75,7 +95,6 @@ public class MailboxContainer extends Container {
   }
 
 
-  // TODO: THIS IS THE CODE THAT HANDLES SHIFT-CLICKING INTO INVENTORY, LOOK HERE TO FIGURE OUT WHERE TO ADD LOGIC TO REMOVE FROM parcelList
   // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
   // must assign a slot number to each of the slots used by the GUI.
   // For this container, we can see both the tile inventory's slots as well as the player inventory slots and the hotbar.
