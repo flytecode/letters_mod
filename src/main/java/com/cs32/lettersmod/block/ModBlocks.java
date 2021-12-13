@@ -22,9 +22,9 @@ public class ModBlocks {
       = DeferredRegister.create(ForgeRegistries.BLOCKS, LettersMod.MOD_ID);
 
   public static final RegistryObject<Block> MAILBOX = registerBlock("mailbox",
-      () -> new MailboxBlock(AbstractBlock.Properties.create(Material.WOOD)));
+      () -> new MailboxBlock(AbstractBlock.Properties.create(Material.WOOD).notSolid()));
   public static final RegistryObject<Block> COLLECTION_BOX = registerBlock("collection_box",
-      () -> new CollectionBoxBlock(AbstractBlock.Properties.create(Material.WOOD)));
+      () -> new CollectionBoxBlock(AbstractBlock.Properties.create(Material.WOOD).notSolid()));
 
 
   private static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block) {
