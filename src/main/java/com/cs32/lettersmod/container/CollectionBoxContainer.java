@@ -1,7 +1,9 @@
 package com.cs32.lettersmod.container;
 
+import com.cs32.lettersmod.LettersMod;
 import com.cs32.lettersmod.block.ModBlocks;
 import com.cs32.lettersmod.courier.MailCourier;
+import com.cs32.lettersmod.network.SendParcelPacket;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
 import com.cs32.lettersmod.tileentity.CollectionBoxTile;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,7 +26,6 @@ public class CollectionBoxContainer extends Container {
   private final TileEntity tileEntity;
   private final PlayerEntity playerEntity;
   private final IItemHandler playerInventory;
-  private final World w;
 
   public CollectionBoxContainer(int windowId, World world, BlockPos pos,
                                 PlayerInventory playerInventory, PlayerEntity player) {
@@ -33,10 +34,6 @@ public class CollectionBoxContainer extends Container {
     playerEntity = player;
     this.playerInventory = new InvWrapper(playerInventory);
     layoutPlayerInventorySlots(8, 86);
-
-    // added to save world
-    this.w = world;
-
 
     if(tileEntity != null) {
       tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
@@ -49,7 +46,7 @@ public class CollectionBoxContainer extends Container {
    * Function that sends whatever is
    */
   public String send() {
-    System.out.println("iamsending!!!!!!");
+    // TODO maybe clean up this code
     // get the current items in the send slot
     CollectionBoxTile tile = (CollectionBoxTile) this.tileEntity;
     ItemStack sendSlot = tile.getSendSlot();
@@ -58,14 +55,9 @@ public class CollectionBoxContainer extends Container {
     if (sendSlot.isEmpty()) {
       return "No items to send";
     } else {
-      if (!w.isRemote()) { //TODO is this gonna work? container is client side?
-        SavedDataClass saver = SavedDataClass.forWorld((ServerWorld) w);
-        String res = MailCourier.send(saver, "hardcodedaddress", sendSlot.toString());
-        System.out.println("sent " + sendSlot + "   with res: " + res);
-        tile.parcelSent();
-        return "Parcel sent!";
-      }
-      return "Error, should not get here";
+      LettersMod.network.sendToServer(new SendParcelPacket("hardcodedaddress", sendSlot.toString()));
+      tile.parcelSent();
+      return "Parcel sent";
     }
   }
 

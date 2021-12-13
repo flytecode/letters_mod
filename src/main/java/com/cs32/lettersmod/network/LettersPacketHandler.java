@@ -2,13 +2,9 @@ package com.cs32.lettersmod.network;
 
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.IServerPlayNetHandler;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
 
-
+//TODO DELETE
 public class LettersPacketHandler implements INetHandler {
   //this is the forge stuff
 //  private static final String PROTOCOL_VERSION = "1";
@@ -29,7 +25,7 @@ public class LettersPacketHandler implements INetHandler {
 //  }
 
   // this is me trying to copy vanilla stuff
-  public void processSendParcel(CSendParcelPacket p) {
+  public void processSendParcel(SendParcelPacket p) {
     System.out.println("parcel: " + p);
   }
 

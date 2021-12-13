@@ -2,6 +2,7 @@ package com.cs32.lettersmod.screen;
 
 import com.cs32.lettersmod.LettersMod;
 import com.cs32.lettersmod.container.CollectionBoxContainer;
+import com.cs32.lettersmod.network.SendParcelPacket;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -16,7 +17,7 @@ public class CollectionBoxScreen extends ContainerScreen<CollectionBoxContainer>
   private final ResourceLocation GUI = new ResourceLocation(LettersMod.MOD_ID,
       "textures/gui/collection_box.png");
   private Button sendButton;
-  private String displayString;
+  private String displayString; //TODO displaying to the player status of stuff
 
   public CollectionBoxScreen(CollectionBoxContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
@@ -29,8 +30,8 @@ public class CollectionBoxScreen extends ContainerScreen<CollectionBoxContainer>
     int i = this.guiLeft;
     int j = this.guiTop;
     this.sendButton = this.addButton(new Button(i + 44, j + 51, 89, 13, new TranslationTextComponent("collectionBox.sendButton"), (p_214318_1_) -> {
-      this.displayString = this.container.send();
-      this.insertText(this.displayString, true);
+      displayString = this.container.send();
+      System.out.println("displayString: " + displayString);
     }));
   }
 

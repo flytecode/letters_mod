@@ -4,6 +4,7 @@ import com.cs32.lettersmod.block.ModBlocks;
 import com.cs32.lettersmod.command.RegisterCommandEvent;
 import com.cs32.lettersmod.container.ModContainers;
 import com.cs32.lettersmod.item.ModItems;
+import com.cs32.lettersmod.network.SendParcelPacket;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
 import com.cs32.lettersmod.screen.CollectionBoxScreen;
 import com.cs32.lettersmod.screen.MailboxScreen;
@@ -11,6 +12,8 @@ import com.cs32.lettersmod.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -25,8 +28,11 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+
 
 import java.util.stream.Collectors;
 
@@ -38,6 +44,9 @@ public class LettersMod {
 
   // Directly reference a log4j logger.
   private static final Logger LOGGER = LogManager.getLogger();
+
+  // set up networking
+  public static SimpleChannel network;
 
   public LettersMod() {
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -65,7 +74,12 @@ public class LettersMod {
     // some preinit code
     LOGGER.info("HELLO FROM PREINIT");
     LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+
+    network = NetworkRegistry.newSimpleChannel(new ResourceLocation(LettersMod.MOD_ID, LettersMod.MOD_ID), () -> "1.0", s -> true, s -> true);
+    network.registerMessage(1, SendParcelPacket.class, SendParcelPacket::toBytes, SendParcelPacket::new, SendParcelPacket::handle);
   }
+
+
 
   private void doClientStuff(final FMLClientSetupEvent event) {
     // do something that can only be done on the client

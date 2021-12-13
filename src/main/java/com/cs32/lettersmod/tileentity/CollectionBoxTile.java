@@ -103,7 +103,7 @@ public class CollectionBoxTile extends TileEntity {
    * function that is called after a parcel has been sent to remove from container
    */
   public void parcelSent() {
-    System.out.println("getSendSlot");
+    System.out.println("parcelSent");
     boolean hasItemsInSlot = this.itemHandler.getStackInSlot(0).getCount() > 0;
     if(hasItemsInSlot) {
       this.itemHandler.getStackInSlot(0).shrink(1);
