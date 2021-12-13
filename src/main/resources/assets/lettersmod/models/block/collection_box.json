@@ -2,11 +2,11 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [48, 48],
 	"textures": {
-		"0": "block/blue_mailbox",
-		"1": "block/blue_collection_box",
-		"2": "block/collection_box",
-		"3": "block/texture",
-		"particle": "block/blue_mailbox"
+		"0": "lettersmod:block/blue_mailbox",
+		"1": "lettersmod:block/blue_collection_box",
+		"2": "lettersmod:block/collection_box",
+		"3": "lettersmod:block/texture",
+		"particle": "lettersmod:block/blue_mailbox"
 	},
 	"elements": [
 		{
