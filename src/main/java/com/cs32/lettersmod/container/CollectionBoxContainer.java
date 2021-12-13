@@ -1,6 +1,9 @@
 package com.cs32.lettersmod.container;
 
 import com.cs32.lettersmod.block.ModBlocks;
+import com.cs32.lettersmod.courier.MailCourier;
+import com.cs32.lettersmod.saveddata.SavedDataClass;
+import com.cs32.lettersmod.tileentity.CollectionBoxTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -10,15 +13,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.apache.logging.log4j.core.jmx.Server;
 
 public class CollectionBoxContainer extends Container {
   private final TileEntity tileEntity;
   private final PlayerEntity playerEntity;
   private final IItemHandler playerInventory;
+  private final World w;
 
   public CollectionBoxContainer(int windowId, World world, BlockPos pos,
                                 PlayerInventory playerInventory, PlayerEntity player) {
@@ -28,11 +34,38 @@ public class CollectionBoxContainer extends Container {
     this.playerInventory = new InvWrapper(playerInventory);
     layoutPlayerInventorySlots(8, 86);
 
+    // added to save world
+    this.w = world;
+
 
     if(tileEntity != null) {
       tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
         addSlot(new SlotItemHandler(h, 0, 18, 26));
       });
+    }
+  }
+
+  /**
+   * Function that sends whatever is
+   */
+  public String send() {
+    System.out.println("iamsending!!!!!!");
+    // get the current items in the send slot
+    CollectionBoxTile tile = (CollectionBoxTile) this.tileEntity;
+    ItemStack sendSlot = tile.getSendSlot();
+
+    // if there are no items return error
+    if (sendSlot.isEmpty()) {
+      return "No items to send";
+    } else {
+      if (!w.isRemote()) { //TODO is this gonna work? container is client side?
+        SavedDataClass saver = SavedDataClass.forWorld((ServerWorld) w);
+        String res = MailCourier.send(saver, "hardcodedaddress", sendSlot.toString());
+        System.out.println("sent " + sendSlot + "   with res: " + res);
+        tile.parcelSent();
+        return "Parcel sent!";
+      }
+      return "Error, should not get here";
     }
   }
 

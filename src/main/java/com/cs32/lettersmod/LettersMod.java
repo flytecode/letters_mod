@@ -157,4 +157,5 @@ public class LettersMod {
       MinecraftForge.EVENT_BUS.register(RegisterCommandEvent.class);
     }
   }
+
 }
