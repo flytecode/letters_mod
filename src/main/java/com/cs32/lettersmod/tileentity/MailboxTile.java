@@ -37,14 +37,6 @@ public class MailboxTile extends TileEntity {
     this(ModTileEntities.MAILBOX_TILE.get());
   }
 
-//  // TODO make it so that items can't be removed from the wrapper?
-//  @Override
-//  public void remove() {
-//    super.remove();
-//    itemHandler.invalidate();
-//    itemHandlerWrapper.invalidate();
-//  }
-
   @Override
   public void read(BlockState state, CompoundNBT nbt) {
     itemHandler.deserializeNBT(nbt.getCompound("inv"));
@@ -107,12 +99,28 @@ public class MailboxTile extends TileEntity {
   }
 
   /**
+   * Method to get the number of slots available
+   * @return - the number of empty slots available
+   */
+  public int getEmptySlots() {
+    return itemHandler.getSlots();
+  }
+
+  /**
    * Method that can only be called by the game (not GUI) to add items to the inventory.
    * @param parcel - ItemStack to add
+   * @return true if succeeded, false if no room
    */
-  public void addParcel(ItemStack parcel) {
+  public boolean addParcel(ItemStack parcel) {
     // TODO change so that this only takes in sealed envelopes
-    // TODO add parcel to inventory
+    for (int i=0; i < 27; i++) {
+      boolean slotEmpty = this.itemHandler.getStackInSlot(i).getCount() == 0;
+      if (slotEmpty) {
+        this.itemHandler.insertItem(i, parcel, false);
+        return true;
+      }
+    }
+    return false; //otherwise, we did not find space
   }
 
   public void lightningHasStruck() {

@@ -45,56 +45,46 @@ public class MailboxBlock extends Block {
 
   @Override
   public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos,
-                                           PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-    if(!worldIn.isRemote()) {
-      TileEntity tileEntity = worldIn.getTileEntity(pos);
+                                           PlayerEntity player, Hand handIn,
+                                           BlockRayTraceResult hit) {
 
-      // TODO get the number of items in the inventory so far
+    //TODO fix this because onBlockActivated always runs on the client thread, so this never activates
+    if (!worldIn.isRemote()) {
+      TileEntity te = worldIn.getTileEntity(pos);
+      assert te != null;
+      if (te instanceof MailboxTile) {
+        MailboxTile tileEntity = (MailboxTile) te;
 
-      // call the getmail command to update the parcelList
-      SavedDataClass saver = SavedDataClass.forWorld((ServerWorld) worldIn);
-      String resultString = MailCourier.getMail(saver, 1);
-      System.out.println(resultString);
+        // get number of empty slots
+        int numEmptySlots = tileEntity.getEmptySlots();
+        System.out.println("empty slots: " + numEmptySlots);
 
-      // now the parcel list should have data
-      ListNBT parcelList = (ListNBT) saver.data.get("parcelList");
-      assert (parcelList != null);
+        // call the getmail command to update the parcelList
+        SavedDataClass saver = SavedDataClass.forWorld((ServerWorld) worldIn);
+        String resultString = MailCourier.getMail(saver, numEmptySlots);
+        System.out.println(resultString);
 
-      // create a new gson to deserialize the parcelstrings
-      Gson gson = new Gson();
+        // now the parcel list should have data
+        ListNBT parcelList = (ListNBT) saver.data.get("parcelList");
+        assert (parcelList != null);
 
-      // loop through and populate the mailbox
-      for (INBT p : parcelList) {
-        // cast it to a CompoundNBT, then get the parcelString and turn into ItemStack
-        String parcelString = ((CompoundNBT) p).getString("parcelString");
-        ItemStack parcel = gson.fromJson(parcelString, ItemStack.class);
+        // create a new gson to deserialize the parcelstrings
+        Gson gson = new Gson();
 
+        // loop through and populate the mailbox
+        for (INBT p : parcelList) {
+          // cast it to a CompoundNBT, then get the parcelString and turn into ItemStack
+          String parcelString = ((CompoundNBT) p).getString("parcelString");
+          ItemStack parcel = gson.fromJson(parcelString, ItemStack.class);
 
-
-        //tileentity.dosomefunctionthataddsparcelstring()
-      }
-
-      // TODO remove this
-      if(!player.isCrouching()) {
-        if(tileEntity instanceof MailboxTile) {
-          INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
-
-          NetworkHooks.openGui(((ServerPlayerEntity)player), containerProvider, tileEntity.getPos());
-        } else {
-          throw new IllegalStateException("Our Container provider is missing!");
-        }
-      } else {
-        if(tileEntity instanceof MailboxTile) {
-          if(worldIn.isThundering()) {
-            EntityType.LIGHTNING_BOLT.spawn(((ServerWorld) worldIn), null, player,
-                pos, SpawnReason.TRIGGERED, true, true);
-
-            ((MailboxTile)tileEntity).lightningHasStruck();
+          // add to tile entity and error check
+          if (!tileEntity.addParcel(parcel)) {
+            throw new IllegalStateException("ERROR inserting items into mailbox");
           }
         }
+      } else {
+        throw new IllegalStateException("ERROR this is not a MailboxTile");
       }
-
-
     }
     return ActionResultType.SUCCESS;
   }
@@ -108,7 +98,8 @@ public class MailboxBlock extends Block {
 
       @Nullable
       @Override
-      public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+      public Container createMenu(int i, PlayerInventory playerInventory,
+                                  PlayerEntity playerEntity) {
         return new MailboxContainer(i, worldIn, pos, playerInventory, playerEntity);
       }
     };

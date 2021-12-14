@@ -22,7 +22,6 @@ public class MailboxScreen extends ContainerScreen<MailboxContainer> {
   }
 
   @Override
-  // button for refreshing our mailbox
   protected void init() {
     super.init();
     int i = this.guiLeft;
@@ -30,12 +29,6 @@ public class MailboxScreen extends ContainerScreen<MailboxContainer> {
     this.refreshButton = this.addButton(new Button(i + 95, j + 3, 70, 13, new TranslationTextComponent("mailBox.refreshButton"), (p_214318_1_) -> {
       System.out.println("REFRESHBUTTON");
     }));
-
-
-//TODO code from vanilla
-//    this.inventoryRows = container.getNumRows();
-//    this.ySize = 114 + this.inventoryRows * 18;
-//    this.playerInventoryTitleY = this.ySize - 94;
   }
 
   @Override

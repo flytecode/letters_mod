@@ -62,7 +62,6 @@ public class MailboxContainer extends Container {
     }
   }
 
-
   public boolean isLightningStorm() {
     return tileEntity.getWorld().isThundering();
   }
