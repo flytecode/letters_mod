@@ -22,8 +22,7 @@ public class ModContainers {
       () -> IForgeContainerType.create(((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntityWorld();
-        IInventory mailboxInv = new Inventory(); // TODO works?
-        return new MailboxContainer(windowId, world, pos, mailboxInv, inv, inv.player);
+        return new MailboxContainer(windowId, world, pos, inv, inv.player);
       })));
 
   public static final RegistryObject<ContainerType<CollectionBoxContainer>> COLLECTION_BOX_CONTAINER

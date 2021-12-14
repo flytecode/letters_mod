@@ -42,32 +42,26 @@ public class MailboxContainer extends Container {
   private final TileEntity tileEntity;
   private final PlayerEntity playerEntity;
   private final IItemHandler playerInventory;
-  private final IInventory mailboxInventory;
-  private final int numRows;
 
-  public MailboxContainer(int windowId, World world, BlockPos pos, IInventory i,
+  public MailboxContainer(int windowId, World world, BlockPos pos,
                                      PlayerInventory playerInventory, PlayerEntity player) {
     super(ModContainers.MAILBOX_CONTAINER.get(), windowId);
     this.tileEntity = world.getTileEntity(pos);
-    this.mailboxInventory = i;
-    this.numRows = 3; //hardcoded in
     playerEntity = player;
     this.playerInventory = new InvWrapper(playerInventory);
-    layoutPlayerInventorySlots(8, 86);
-
+    layoutPlayerInventorySlots(8, 84);
 
     if(tileEntity != null) {
       tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-        addSlot(new SlotItemHandler(h, 0, 80, 31));
-        addSlot(new SlotItemHandler(h, 1, 80, 53));
+        for (int i=0; i < 18; i++) {
+          addSlot(new SlotItemHandler(h, i, 8 + (18*i), 18)); //row 1
+          addSlot(new SlotItemHandler(h, i + 18, 8 + (18*i), 36)); //row 2
+          addSlot(new SlotItemHandler(h, i + 36, 8 + (18*i), 54)); //row 3
+        }
       });
     }
   }
 
-
-  public int getNumRows() {
-    return this.numRows;
-  }
 
   public boolean isLightningStorm() {
     return tileEntity.getWorld().isThundering();
@@ -80,6 +74,7 @@ public class MailboxContainer extends Container {
   }
 
 
+  // tutorial code for laying out player inventory slots
   private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
     for (int i = 0; i < amount; i++) {
       addSlot(new SlotItemHandler(handler, index, x, y));
@@ -90,6 +85,7 @@ public class MailboxContainer extends Container {
     return index;
   }
 
+  // tutorial code for laying out player inventory slots
   private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
     for (int j = 0; j < verAmount; j++) {
       index = addSlotRange(handler, index, x, y, horAmount, dx);
@@ -123,8 +119,10 @@ public class MailboxContainer extends Container {
   private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
   // THIS YOU HAVE TO DEFINE!
-  private static final int TE_INVENTORY_SLOT_COUNT = 2;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
+  private static final int TE_INVENTORY_SLOT_COUNT = 27;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
 
+  // TODO fix the small bug where if you shift click it moves it around within the player inventory, want it
+  //  to have the same effect as normal inventory hotbar <-> main
   @Override
   public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
     Slot sourceSlot = inventorySlots.get(index);
@@ -133,13 +131,15 @@ public class MailboxContainer extends Container {
     ItemStack copyOfSourceStack = sourceStack.copy();
 
     // Check if the slot clicked is one of the vanilla container slots
-    if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
-      // This is a vanilla container slot so merge the stack into the tile inventory
-      if (!mergeItemStack(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
-          + TE_INVENTORY_SLOT_COUNT, false)) {
-        return ItemStack.EMPTY;  // EMPTY_ITEM
-      }
-    } else if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
+    // THIS IS COMMENTED OUT SO THAT PLAYERS CANNOT INSERT INTO THE MAILBOX BY SHIFT CLICKING
+//    if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
+//      // This is a vanilla container slot so merge the stack into the tile inventory
+//      if (!mergeItemStack(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
+//          + TE_INVENTORY_SLOT_COUNT, false)) {
+//        return ItemStack.EMPTY;  // EMPTY_ITEM
+//      }
+//    }
+    if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
       // This is a TE slot so merge the stack into the players inventory
       if (!mergeItemStack(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
         return ItemStack.EMPTY;

@@ -1,0 +1,109 @@
+---- Minecraft Crash Report ----
+// Oh - I know what I did wrong!
+
+Time: 12/14/21 2:51 PM
+Description: Ticking entity
+
+java.lang.RuntimeException: Slot 18 not in valid range - [0,2)
+	at net.minecraftforge.items.ItemStackHandler.validateSlotIndex(ItemStackHandler.java:221) ~[forge:?] {re:classloading}
+	at net.minecraftforge.items.ItemStackHandler.getStackInSlot(ItemStackHandler.java:73) ~[forge:?] {re:classloading}
+	at net.minecraftforge.items.SlotItemHandler.getStack(SlotItemHandler.java:54) ~[forge:?] {re:classloading}
+	at net.minecraft.inventory.container.Container.detectAndSendChanges(Container.java:132) ~[forge:?] {re:classloading}
+	at net.minecraft.entity.player.ServerPlayerEntity.tick(ServerPlayerEntity.java:378) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.server.ServerWorld.updateEntity(ServerWorld.java:623) ~[forge:?] {re:classloading}
+	at net.minecraft.world.World.guardEntityTick(World.java:601) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.server.ServerWorld.tick(ServerWorld.java:407) ~[forge:?] {re:classloading}
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:885) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:821) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:84) ~[forge:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.func_240802_v_(MinecraftServer.java:664) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$startServer$0(MinecraftServer.java:233) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_291] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Stacktrace:
+	at net.minecraftforge.items.ItemStackHandler.validateSlotIndex(ItemStackHandler.java:221) ~[forge:?] {re:classloading}
+	at net.minecraftforge.items.ItemStackHandler.getStackInSlot(ItemStackHandler.java:73) ~[forge:?] {re:classloading}
+	at net.minecraftforge.items.SlotItemHandler.getStack(SlotItemHandler.java:54) ~[forge:?] {re:classloading}
+	at net.minecraft.inventory.container.Container.detectAndSendChanges(Container.java:132) ~[forge:?] {re:classloading}
+	at net.minecraft.entity.player.ServerPlayerEntity.tick(ServerPlayerEntity.java:378) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.server.ServerWorld.updateEntity(ServerWorld.java:623) ~[forge:?] {re:classloading}
+-- Entity being ticked --
+Details:
+	Entity Type: minecraft:player (net.minecraft.entity.player.ServerPlayerEntity)
+	Entity ID: 14
+	Entity Name: Dev
+	Entity's Exact location: -180.08, 4.00, -94.99
+	Entity's Block location: World: (-181,4,-95), Chunk: (at 11,0,1 in -12,-6; contains blocks -192,0,-96 to -177,255,-81), Region: (-1,-1; contains chunks -32,-32 to -1,-1, blocks -512,0,-512 to -1,255,-1)
+	Entity's Momentum: 0.00, -0.08, 0.00
+	Entity's Passengers: []
+	Entity's Vehicle: ~~ERROR~~ NullPointerException: null
+Stacktrace:
+	at net.minecraft.world.World.guardEntityTick(World.java:601) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.server.ServerWorld.tick(ServerWorld.java:407) ~[forge:?] {re:classloading}
+
+
+-- Affected level --
+Details:
+	All players: 1 total; [ServerPlayerEntity['Dev'/14, l='ServerLevel[superflat]', x=-180.08, y=4.00, z=-94.99]]
+	Chunk stats: ServerChunkCache: 2194
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (-176,4,-96), Chunk: (at 0,0,0 in -11,-6; contains blocks -176,0,-96 to -161,255,-81), Region: (-1,-1; contains chunks -32,-32 to -1,-1, blocks -512,0,-512 to -1,255,-1)
+	Level time: 4330 game time, 4330 day time
+	Level name: superflat
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+	Level weather: Rain time: 65951 (now: false), thunder time: 149929 (now: false)
+	Known server brands: forge
+	Level was modded: true
+	Level storage version: 0x04ABD - Anvil
+Stacktrace:
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:885) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:821) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:84) ~[forge:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.func_240802_v_(MinecraftServer.java:664) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$startServer$0(MinecraftServer.java:233) ~[forge:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_291] {}
+
+
+-- System Details --
+Details:
+	Minecraft Version: 1.16.5
+	Minecraft Version ID: 1.16.5
+	Operating System: Mac OS X (x86_64) version 10.16
+	Java Version: 1.8.0_291, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 1040678760 bytes (992 MB) / 1983381504 bytes (1891 MB) up to 3817865216 bytes (3641 MB)
+	CPUs: 12
+	JVM Flags: 2 total; -XX:+IgnoreUnrecognizedVMOptions -Xss1M
+	ModLauncher: 8.0.9+86+master.3cf110c
+	ModLauncher launch target: fmluserdevclient
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		/mixin-0.8.2.jar mixin PLUGINSERVICE 
+		/eventbus-4.0.0.jar eventbus PLUGINSERVICE 
+		/forge-1.16.5-36.2.0_mapped_snapshot_20210309-1.16.5-launcher.jar object_holder_definalize PLUGINSERVICE 
+		/forge-1.16.5-36.2.0_mapped_snapshot_20210309-1.16.5-launcher.jar runtime_enum_extender PLUGINSERVICE 
+		/accesstransformers-3.0.1.jar accesstransformer PLUGINSERVICE 
+		/forge-1.16.5-36.2.0_mapped_snapshot_20210309-1.16.5-launcher.jar capability_inject_definalize PLUGINSERVICE 
+		/forge-1.16.5-36.2.0_mapped_snapshot_20210309-1.16.5-launcher.jar runtimedistcleaner PLUGINSERVICE 
+		/mixin-0.8.2.jar mixin TRANSFORMATIONSERVICE 
+		/forge-1.16.5-36.2.0_mapped_snapshot_20210309-1.16.5-launcher.jar fml TRANSFORMATIONSERVICE 
+	FML: 36.2
+	Forge: net.minecraftforge:36.2.0
+	FML Language Providers: 
+		javafml@36.2
+		minecraft@1
+	Mod List: 
+		client-extra.jar                                  |Minecraft                     |minecraft                     |1.16.5              |DONE      |Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+		forge-1.16.5-36.2.0_mapped_snapshot_20210309-1.16.|Forge                         |forge                         |36.2.0              |DONE      |Manifest: NOSIGNATURE
+		main                                              |Letters Mod                   |lettersmod                    |NONE                |DONE      |Manifest: NOSIGNATURE
+	Crash Report UUID: b4a0bc04-4e7d-4c72-991f-f25a4186c81a
+	Player Count: 1 / 8; [ServerPlayerEntity['Dev'/14, l='ServerLevel[superflat]', x=-180.08, y=4.00, z=-94.99]]
+	Data Packs: vanilla, mod:forge, mod:lettersmod
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'forge'

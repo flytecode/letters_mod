@@ -74,25 +74,25 @@ public class MailboxBlock extends Block {
         //tileentity.dosomefunctionthataddsparcelstring()
       }
 
+      // TODO remove this
+      if(!player.isCrouching()) {
+        if(tileEntity instanceof MailboxTile) {
+          INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
 
-//      if(!player.isCrouching()) {
-//        if(tileEntity instanceof MailboxTile) {
-//          INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
-//
-//          NetworkHooks.openGui(((ServerPlayerEntity)player), containerProvider, tileEntity.getPos());
-//        } else {
-//          throw new IllegalStateException("Our Container provider is missing!");
-//        }
-//      } else {
-//        if(tileEntity instanceof MailboxTile) {
-//          if(worldIn.isThundering()) {
-//            EntityType.LIGHTNING_BOLT.spawn(((ServerWorld) worldIn), null, player,
-//                pos, SpawnReason.TRIGGERED, true, true);
-//
-//            ((MailboxTile)tileEntity).lightningHasStruck();
-//          }
-//        }
-//      }
+          NetworkHooks.openGui(((ServerPlayerEntity)player), containerProvider, tileEntity.getPos());
+        } else {
+          throw new IllegalStateException("Our Container provider is missing!");
+        }
+      } else {
+        if(tileEntity instanceof MailboxTile) {
+          if(worldIn.isThundering()) {
+            EntityType.LIGHTNING_BOLT.spawn(((ServerWorld) worldIn), null, player,
+                pos, SpawnReason.TRIGGERED, true, true);
+
+            ((MailboxTile)tileEntity).lightningHasStruck();
+          }
+        }
+      }
 
 
     }
@@ -109,8 +109,7 @@ public class MailboxBlock extends Block {
       @Nullable
       @Override
       public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        IInventory mailboxInv = new Inventory(); //TODO works?
-        return new MailboxContainer(i, worldIn, pos, mailboxInv, playerInventory, playerEntity);
+        return new MailboxContainer(i, worldIn, pos, playerInventory, playerEntity);
       }
     };
   }
