@@ -107,6 +107,14 @@ public class MailboxTile extends TileEntity {
   }
 
   /**
+   * Method to remove all of the items currently in tile
+   */
+  public void removeAllItems() {
+    itemHandler = createHandler();
+    itemHandlerWrapper = new OnlyRemoveWrapper(itemHandler);
+  }
+
+  /**
    * Method that can only be called by the game (not GUI) to add items to the inventory.
    * @param parcel - ItemStack to add
    * @return true if succeeded, false if no room

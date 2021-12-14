@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
@@ -53,8 +54,11 @@ public class CollectionBoxContainer extends Container {
     ItemStack sendSlot = tile.getSendSlot();
 
     // convert into a json string
-    Gson gson = new Gson();
-    String parcelString = gson.toJson(sendSlot); 
+    CompoundNBT parcelNBT = new CompoundNBT();
+    sendSlot.write(parcelNBT);
+    String parcelString = parcelNBT.getString();
+
+    System.out.println("parcelString: " + parcelString);
 
     // if there are no items return error
     if (sendSlot.isEmpty()) {

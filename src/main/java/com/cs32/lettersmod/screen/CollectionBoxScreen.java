@@ -2,7 +2,6 @@ package com.cs32.lettersmod.screen;
 
 import com.cs32.lettersmod.LettersMod;
 import com.cs32.lettersmod.container.CollectionBoxContainer;
-import com.cs32.lettersmod.network.SendParcelPacket;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;

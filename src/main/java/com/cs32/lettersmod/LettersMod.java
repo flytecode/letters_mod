@@ -5,6 +5,7 @@ import com.cs32.lettersmod.command.RegisterCommandEvent;
 import com.cs32.lettersmod.container.ModContainers;
 import com.cs32.lettersmod.item.ModItems;
 import com.cs32.lettersmod.network.GetMailPacket;
+import com.cs32.lettersmod.network.MailboxOpenedPacket;
 import com.cs32.lettersmod.network.SendParcelPacket;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
 import com.cs32.lettersmod.screen.CollectionBoxScreen;
@@ -79,6 +80,7 @@ public class LettersMod {
     network = NetworkRegistry.newSimpleChannel(new ResourceLocation(LettersMod.MOD_ID, LettersMod.MOD_ID), () -> "1.0", s -> true, s -> true);
     network.registerMessage(1, SendParcelPacket.class, SendParcelPacket::toBytes, SendParcelPacket::new, SendParcelPacket::handle);
     network.registerMessage(2, GetMailPacket.class, GetMailPacket::toBytes, GetMailPacket::new, GetMailPacket::handle);
+    network.registerMessage(3, MailboxOpenedPacket.class, MailboxOpenedPacket::toBytes, MailboxOpenedPacket::new, MailboxOpenedPacket::handle);
   }
 
 
