@@ -16,6 +16,9 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -41,28 +44,46 @@ public class MailboxBlock extends Block {
     if(!worldIn.isRemote()) {
       TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-      //TODO this is the type of place where you would call the MailCourier methods, need to do in interface
+      // TODO get the number of items in the inventory so far
+
+      // call the getmail command to update the parcelList
       SavedDataClass saver = SavedDataClass.forWorld((ServerWorld) worldIn);
       String resultString = MailCourier.getMail(saver, 1);
+      System.out.println(resultString);
 
-      if(!player.isCrouching()) {
-        if(tileEntity instanceof MailboxTile) {
-          INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
+      // now the parcel list should have data
+      ListNBT parcelList = (ListNBT) saver.data.get("parcelList");
+      assert (parcelList != null);
 
-          NetworkHooks.openGui(((ServerPlayerEntity)player), containerProvider, tileEntity.getPos());
-        } else {
-          throw new IllegalStateException("Our Container provider is missing!");
-        }
-      } else {
-        if(tileEntity instanceof MailboxTile) {
-          if(worldIn.isThundering()) {
-            EntityType.LIGHTNING_BOLT.spawn(((ServerWorld) worldIn), null, player,
-                pos, SpawnReason.TRIGGERED, true, true);
-
-            ((MailboxTile)tileEntity).lightningHasStruck();
-          }
-        }
+      // loop through and populate the mailbox
+      for (INBT p : parcelList) {
+        // cast and get the parcel string
+//        if (p.get("parcelString")) {
+//        //tileentity.dosomefunctionthataddsparcelstring()
+//        }
       }
+
+
+//      if(!player.isCrouching()) {
+//        if(tileEntity instanceof MailboxTile) {
+//          INamedContainerProvider containerProvider = createContainerProvider(worldIn, pos);
+//
+//          NetworkHooks.openGui(((ServerPlayerEntity)player), containerProvider, tileEntity.getPos());
+//        } else {
+//          throw new IllegalStateException("Our Container provider is missing!");
+//        }
+//      } else {
+//        if(tileEntity instanceof MailboxTile) {
+//          if(worldIn.isThundering()) {
+//            EntityType.LIGHTNING_BOLT.spawn(((ServerWorld) worldIn), null, player,
+//                pos, SpawnReason.TRIGGERED, true, true);
+//
+//            ((MailboxTile)tileEntity).lightningHasStruck();
+//          }
+//        }
+//      }
+
+
     }
     return ActionResultType.SUCCESS;
   }
