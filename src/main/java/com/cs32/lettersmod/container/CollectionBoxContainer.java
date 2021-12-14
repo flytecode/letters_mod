@@ -6,6 +6,7 @@ import com.cs32.lettersmod.courier.MailCourier;
 import com.cs32.lettersmod.network.SendParcelPacket;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
 import com.cs32.lettersmod.tileentity.CollectionBoxTile;
+import com.google.gson.Gson;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -51,11 +52,15 @@ public class CollectionBoxContainer extends Container {
     CollectionBoxTile tile = (CollectionBoxTile) this.tileEntity;
     ItemStack sendSlot = tile.getSendSlot();
 
+    // convert into a json string
+    Gson gson = new Gson();
+    String parcelString = gson.toJson(sendSlot); 
+
     // if there are no items return error
     if (sendSlot.isEmpty()) {
       return "No items to send";
     } else {
-      LettersMod.network.sendToServer(new SendParcelPacket("hardcodedaddress", sendSlot.toString()));
+      LettersMod.network.sendToServer(new SendParcelPacket("hardcodedaddress", parcelString));
       tile.parcelSent();
       return "Parcel sent";
     }

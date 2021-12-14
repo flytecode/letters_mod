@@ -3,6 +3,7 @@ package com.cs32.lettersmod.container;
 import com.cs32.lettersmod.block.ModBlocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -10,6 +11,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -39,11 +42,15 @@ public class MailboxContainer extends Container {
   private final TileEntity tileEntity;
   private final PlayerEntity playerEntity;
   private final IItemHandler playerInventory;
+  private final IInventory mailboxInventory;
+  private final int numRows;
 
-  public MailboxContainer(int windowId, World world, BlockPos pos,
+  public MailboxContainer(int windowId, World world, BlockPos pos, IInventory i,
                                      PlayerInventory playerInventory, PlayerEntity player) {
     super(ModContainers.MAILBOX_CONTAINER.get(), windowId);
     this.tileEntity = world.getTileEntity(pos);
+    this.mailboxInventory = i;
+    this.numRows = 3; //hardcoded in
     playerEntity = player;
     this.playerInventory = new InvWrapper(playerInventory);
     layoutPlayerInventorySlots(8, 86);
@@ -55,6 +62,11 @@ public class MailboxContainer extends Container {
         addSlot(new SlotItemHandler(h, 1, 80, 53));
       });
     }
+  }
+
+
+  public int getNumRows() {
+    return this.numRows;
   }
 
   public boolean isLightningStorm() {

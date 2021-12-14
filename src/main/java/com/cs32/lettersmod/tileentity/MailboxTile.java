@@ -81,7 +81,6 @@ public class MailboxTile extends TileEntity {
     };
   }
 
-  //TODO remove, don't think we need this it's for being able to make hoppers feed in
   @Nonnull
   @Override
   public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -90,6 +89,11 @@ public class MailboxTile extends TileEntity {
     }
 
     return super.getCapability(cap, side);
+  }
+
+  public void addParcel(ItemStack parcel) {
+    // TODO change so that this only takes in sealed envelopes
+    // TODO add parcel to inventory
   }
 
   public void lightningHasStruck() {

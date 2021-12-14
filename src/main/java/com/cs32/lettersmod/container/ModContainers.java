@@ -1,6 +1,8 @@
 package com.cs32.lettersmod.container;
 
 import com.cs32.lettersmod.LettersMod;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -20,7 +22,8 @@ public class ModContainers {
       () -> IForgeContainerType.create(((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntityWorld();
-        return new MailboxContainer(windowId, world, pos, inv, inv.player);
+        IInventory mailboxInv = new Inventory(); // TODO works?
+        return new MailboxContainer(windowId, world, pos, mailboxInv, inv, inv.player);
       })));
 
   public static final RegistryObject<ContainerType<CollectionBoxContainer>> COLLECTION_BOX_CONTAINER

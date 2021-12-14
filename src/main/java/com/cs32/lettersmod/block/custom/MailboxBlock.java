@@ -6,6 +6,7 @@ import com.cs32.lettersmod.courier.MailCourier;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
 import com.cs32.lettersmod.tileentity.MailboxTile;
 import com.cs32.lettersmod.tileentity.ModTileEntities;
+import com.google.gson.Gson;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -14,10 +15,14 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -55,12 +60,18 @@ public class MailboxBlock extends Block {
       ListNBT parcelList = (ListNBT) saver.data.get("parcelList");
       assert (parcelList != null);
 
+      // create a new gson to deserialize the parcelstrings
+      Gson gson = new Gson();
+
       // loop through and populate the mailbox
       for (INBT p : parcelList) {
-        // cast and get the parcel string
-//        if (p.get("parcelString")) {
-//        //tileentity.dosomefunctionthataddsparcelstring()
-//        }
+        // cast it to a CompoundNBT, then get the parcelString and turn into ItemStack
+        String parcelString = ((CompoundNBT) p).getString("parcelString");
+        ItemStack parcel = gson.fromJson(parcelString, ItemStack.class);
+
+
+
+        //tileentity.dosomefunctionthataddsparcelstring()
       }
 
 
@@ -98,7 +109,8 @@ public class MailboxBlock extends Block {
       @Nullable
       @Override
       public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new MailboxContainer(i, worldIn, pos, playerInventory, playerEntity);
+        IInventory mailboxInv = new Inventory(); //TODO works?
+        return new MailboxContainer(i, worldIn, pos, mailboxInv, playerInventory, playerEntity);
       }
     };
   }
