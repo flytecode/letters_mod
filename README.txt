@@ -1,4 +1,29 @@
 
+Project Details
+-------------------------------------------
+Project Name: Letters Mod
+
+Project Description: This repository contains everything related to the Minecraft
+mod portion of our project. This includes the new items, menus, and in-game
+commands we've added to the game. The commands connect to our database
+repository, which is hosted on Heroku. The goal of this mod is to allow users
+in single player Minecraft worlds to send items between different worlds.
+This includes worlds owned by different people or different worlds owned by the same person.
+
+Team Members and Contributions:
+- Sheridan Feucht (sfeucht):
+- Katarina Stephan (ks59):
+- Andy Zhou (azhou35):
+- Futen Wang (fwang45):
+- Lucas Brito (lbrito2):
+- Olena Mursalova (omursalo): Worked on the server branch to establish the initial Address and Parcel
+    classes for storing data from the database. Worked on creating a separate repository for the
+    server/database that can be hosted on Heroku. Integrated the initAddr and changeAddr commands
+    with the database.
+
+Relevant Links
+- The server/database part of this project: https://github.com/7M5kRp8QUjxzDJFS/LettersModDatabase
+
 Source installation information for modders
 -------------------------------------------
 This code follows the Minecraft Forge installation methodology. It will apply
