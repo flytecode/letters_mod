@@ -47,7 +47,7 @@ public class CollectionBoxTile extends TileEntity {
   }
 
   private ItemStackHandler createHandler() {
-    return new ItemStackHandler(2) {
+    return new ItemStackHandler(1) {
       @Override
       protected void onContentsChanged(int slot) {
         markDirty();
@@ -105,9 +105,13 @@ public class CollectionBoxTile extends TileEntity {
    * function that is called after a parcel has been sent to remove from container
    */
   public void parcelSent() {
+    System.out.println("parcelSent");
     boolean hasItemsInSlot = this.itemHandler.getStackInSlot(0).getCount() > 0;
     if(hasItemsInSlot) {
-      this.itemHandler.getStackInSlot(0).shrink(1);
+//      this.itemHandler.getStackInSlot(0).shrink(1);
+//      markDirty();
+      this.itemHandler.extractItem(0, 64, false);
+      markDirty();
     }
   }
 }

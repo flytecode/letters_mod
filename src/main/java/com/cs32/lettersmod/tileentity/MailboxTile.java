@@ -1,10 +1,14 @@
 package com.cs32.lettersmod.tileentity;
 
+import com.cs32.lettersmod.courier.MailCourier;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
+import com.google.gson.Gson;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -96,6 +100,56 @@ public class MailboxTile extends TileEntity {
     }
 
     return super.getCapability(cap, side);
+  }
+
+
+  /*
+  // call the getmail command to update the parcelList
+    SavedDataClass saver = SavedDataClass.forWorld((ServerWorld) world);
+    String resultString = MailCourier.getMail(saver, numEmptySlots);
+    System.out.println(resultString);
+
+
+   */
+
+  public void refreshItems() {
+    // get number of empty slots
+    int numEmptySlots = this.getEmptySlots(); // TODO fix/override so that it does not acct for player inventory
+    System.out.println("empty slots: " + numEmptySlots);
+
+    if (!world.isRemote()) {
+      // get the parcel list for the world currently
+      SavedDataClass saver = SavedDataClass.forWorld((ServerWorld) world);
+      ListNBT parcelList = (ListNBT) saver.data.get("parcelList");
+
+      // if there is anything in the parcel list, want to update mail view
+      if (parcelList != null) {
+        this.removeAllItems();
+
+        // loop through and repopulate the mailbox
+        for (INBT p : parcelList) {
+          // cast it to a CompoundNBT, then get the parcelString and turn into ItemStack
+          String parcelString = ((CompoundNBT) p).getString("parcelString");
+
+          System.out.println("receivedparcelString: "+ parcelString);
+
+          // TODO figure out how to actually deserialize into an item
+          //ItemStack parcel = gson.fromJson(parcelString, ItemStack.class);
+          ItemStack parcel = new ItemStack(Items.POPPY.getItem());
+
+          // add to tile entity and error check
+          if (parcel != null) {
+            if (!this.addParcel(parcel)) {
+              throw new IllegalStateException("ERROR mailbox ran out of room");
+            }
+          }
+        }
+      }
+    }
+
+
+
+
   }
 
   /**
