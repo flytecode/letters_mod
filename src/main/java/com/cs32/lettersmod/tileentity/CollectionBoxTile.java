@@ -21,6 +21,8 @@ import javax.annotation.Nullable;
 
 public class CollectionBoxTile extends TileEntity {
 
+  // TODO fix bug with shift-click, fix item reappearing after you send
+
   private final ItemStackHandler itemHandler = createHandler();
   private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
@@ -51,19 +53,17 @@ public class CollectionBoxTile extends TileEntity {
         markDirty();
       }
 
-      // TODO make this so that if it's a receiving slot always false, if it's a sending slot true only for parcels and stamps
+      // TODO once envelopes are implemented, make this ensure you can only send envelopes
       @Override
       public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         switch (slot) {
-          case 0: return stack.getItem() == Items.GLASS_PANE;
-          case 1: return stack.getItem() == ModItems.AMETHYST.get() ||
-              stack.getItem() == ModItems.FIRESTONE.get();
+          case 0: return true; // return stack.getItem() == ModItems.AMETHYST.get() || stack.getItem() == ModItems.FIRESTONE.get();
           default:
             return false;
         }
       }
 
-      // TODO here, for the send pane, we want to add logic to only allow 1 stamp and one parcel
+      // TODO allow only 1 sealed envelope to be sent
       @Override
       public int getSlotLimit(int slot) {
         return 1;
@@ -92,17 +92,22 @@ public class CollectionBoxTile extends TileEntity {
     return super.getCapability(cap, side);
   }
 
-  public void lightningHasStruck() {
-    boolean hasFocusInFirstSlot = this.itemHandler.getStackInSlot(0).getCount() > 0
-        && this.itemHandler.getStackInSlot(0).getItem() == Items.GLASS_PANE;
-    boolean hasAmethystInSecondSlot = this.itemHandler.getStackInSlot(1).getCount() > 0
-        && this.itemHandler.getStackInSlot(1).getItem() == ModItems.AMETHYST.get();
+  /**
+   * Getter for items in the send slot
+   * @return ItemStack of whatever is in send slot right now
+   */
+  public ItemStack getSendSlot() {
+    System.out.println("getSendSlot");
+    return this.itemHandler.getStackInSlot(0);
+  }
 
-    if(hasFocusInFirstSlot && hasAmethystInSecondSlot) {
+  /**
+   * function that is called after a parcel has been sent to remove from container
+   */
+  public void parcelSent() {
+    boolean hasItemsInSlot = this.itemHandler.getStackInSlot(0).getCount() > 0;
+    if(hasItemsInSlot) {
       this.itemHandler.getStackInSlot(0).shrink(1);
-      this.itemHandler.getStackInSlot(1).shrink(1);
-
-      this.itemHandler.insertItem(1, new ItemStack(ModItems.FIRESTONE.get()), false);
     }
   }
 }

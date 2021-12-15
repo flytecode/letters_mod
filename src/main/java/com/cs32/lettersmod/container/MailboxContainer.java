@@ -3,6 +3,7 @@ package com.cs32.lettersmod.container;
 import com.cs32.lettersmod.block.ModBlocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -10,10 +11,32 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+
+/*
+Mailbox Receiving Screen
+** need to make it show "My address: 123456"
+** need to make it so that players cannot put things into mailbox inventory, only take items out
+
+on mailbox being opened:
+- refreshMailView() to replace contents of mailbox with whatever's in parcelList
+
+on refresh button being pressed:
+- getMail() to do /getmail command and update parcelList
+- if successful: refreshMailView() to replace contents of mailbox
+- if not successful: message in GUI "could not connect"
+
+on item being removed:
+- delete that item from the parcelList
+OR on mailbox being closed/exited:
+- replace parcelList with contents of mailbox now that they've removed everything
+ */
+
 
 public class MailboxContainer extends Container {
   private final TileEntity tileEntity;
@@ -26,13 +49,15 @@ public class MailboxContainer extends Container {
     this.tileEntity = world.getTileEntity(pos);
     playerEntity = player;
     this.playerInventory = new InvWrapper(playerInventory);
-    layoutPlayerInventorySlots(8, 86);
-
+    layoutPlayerInventorySlots(8, 84);
 
     if(tileEntity != null) {
       tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-        addSlot(new SlotItemHandler(h, 0, 80, 31));
-        addSlot(new SlotItemHandler(h, 1, 80, 53));
+        for (int i=0; i < 9; i++) {
+          addSlot(new SlotItemHandler(h, i, 8 + (18*i), 18)); //row 1
+          addSlot(new SlotItemHandler(h, i + 18, 8 + (18*i), 36)); //row 2
+          addSlot(new SlotItemHandler(h, i + 36, 8 + (18*i), 54)); //row 3
+        }
       });
     }
   }
@@ -48,6 +73,7 @@ public class MailboxContainer extends Container {
   }
 
 
+  // tutorial code for laying out player inventory slots
   private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
     for (int i = 0; i < amount; i++) {
       addSlot(new SlotItemHandler(handler, index, x, y));
@@ -58,6 +84,7 @@ public class MailboxContainer extends Container {
     return index;
   }
 
+  // tutorial code for laying out player inventory slots
   private int addSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
     for (int j = 0; j < verAmount; j++) {
       index = addSlotRange(handler, index, x, y, horAmount, dx);
@@ -75,7 +102,6 @@ public class MailboxContainer extends Container {
   }
 
 
-  // TODO: THIS IS THE CODE THAT HANDLES SHIFT-CLICKING INTO INVENTORY, LOOK HERE TO FIGURE OUT WHERE TO ADD LOGIC TO REMOVE FROM parcelList
   // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
   // must assign a slot number to each of the slots used by the GUI.
   // For this container, we can see both the tile inventory's slots as well as the player inventory slots and the hotbar.
@@ -92,8 +118,10 @@ public class MailboxContainer extends Container {
   private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
   // THIS YOU HAVE TO DEFINE!
-  private static final int TE_INVENTORY_SLOT_COUNT = 2;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
+  private static final int TE_INVENTORY_SLOT_COUNT = 27;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
 
+  // TODO fix the small bug where if you shift click it moves it around within the player inventory, want it
+  //  to have the same effect as normal inventory hotbar <-> main
   @Override
   public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
     Slot sourceSlot = inventorySlots.get(index);
@@ -102,13 +130,15 @@ public class MailboxContainer extends Container {
     ItemStack copyOfSourceStack = sourceStack.copy();
 
     // Check if the slot clicked is one of the vanilla container slots
-    if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
-      // This is a vanilla container slot so merge the stack into the tile inventory
-      if (!mergeItemStack(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
-          + TE_INVENTORY_SLOT_COUNT, false)) {
-        return ItemStack.EMPTY;  // EMPTY_ITEM
-      }
-    } else if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
+    // THIS IS COMMENTED OUT SO THAT PLAYERS CANNOT INSERT INTO THE MAILBOX BY SHIFT CLICKING
+//    if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
+//      // This is a vanilla container slot so merge the stack into the tile inventory
+//      if (!mergeItemStack(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
+//          + TE_INVENTORY_SLOT_COUNT, false)) {
+//        return ItemStack.EMPTY;  // EMPTY_ITEM
+//      }
+//    }
+    if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
       // This is a TE slot so merge the stack into the players inventory
       if (!mergeItemStack(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
         return ItemStack.EMPTY;

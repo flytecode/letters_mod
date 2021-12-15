@@ -1,6 +1,8 @@
 package com.cs32.lettersmod.container;
 
 import com.cs32.lettersmod.LettersMod;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

@@ -1,0 +1,15 @@
+{
+  "minecraft:recipes/misc/blue_dye_from_cornflower": {
+    "criteria": {
+      "has_blue_flower": "2021-12-14 19:32:53 -0500"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:plains": "2021-12-14 19:32:36 -0500"
+    },
+    "done": false
+  },
+  "DataVersion": 2586
+}

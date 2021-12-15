@@ -16,6 +16,7 @@ public class CollectionBoxScreen extends ContainerScreen<CollectionBoxContainer>
   private final ResourceLocation GUI = new ResourceLocation(LettersMod.MOD_ID,
       "textures/gui/collection_box.png");
   private Button sendButton;
+  private String displayString; //TODO displaying to the player status of stuff
 
   public CollectionBoxScreen(CollectionBoxContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
@@ -28,7 +29,8 @@ public class CollectionBoxScreen extends ContainerScreen<CollectionBoxContainer>
     int i = this.guiLeft;
     int j = this.guiTop;
     this.sendButton = this.addButton(new Button(i + 44, j + 51, 89, 13, new TranslationTextComponent("collectionBox.sendButton"), (p_214318_1_) -> {
-      System.out.println("SENDBUTTON");
+      displayString = this.container.send();
+      System.out.println("displayString: " + displayString);
     }));
   }
 

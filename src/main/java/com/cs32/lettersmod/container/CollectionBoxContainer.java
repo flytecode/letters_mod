@@ -1,19 +1,31 @@
 package com.cs32.lettersmod.container;
 
+import com.cs32.lettersmod.LettersMod;
 import com.cs32.lettersmod.block.ModBlocks;
+import com.cs32.lettersmod.courier.MailCourier;
+import com.cs32.lettersmod.network.SendParcelPacket;
+import com.cs32.lettersmod.saveddata.SavedDataClass;
+import com.cs32.lettersmod.tileentity.CollectionBoxTile;
+import com.google.gson.Gson;
+import net.minecraft.command.arguments.NBTTagArgument;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.apache.logging.log4j.core.jmx.Server;
 
 public class CollectionBoxContainer extends Container {
   private final TileEntity tileEntity;
@@ -28,11 +40,50 @@ public class CollectionBoxContainer extends Container {
     this.playerInventory = new InvWrapper(playerInventory);
     layoutPlayerInventorySlots(8, 86);
 
-
     if(tileEntity != null) {
       tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
         addSlot(new SlotItemHandler(h, 0, 18, 26));
       });
+    }
+  }
+
+  /**
+   * Function that sends whatever is
+   */
+  public String send() {
+    // TODO maybe clean up this code
+    // get the current items in the send slot
+    CollectionBoxTile tile = (CollectionBoxTile) this.tileEntity;
+    ItemStack sendSlot = tile.getSendSlot();
+
+//    NBTTagCompound n = new NBTTagCompound();
+
+    /*
+    Parcel serialization this doesnt work
+
+ CompoundNBT parcelNBT = new CompoundNBT();
+    sendSlot.write(parcelNBT);
+    String parcelString = parcelNBT.getString();
+
+     */
+    // DOES NOT WORK convert into a json string
+//    Gson gson = new Gson();
+//    String parcelString = gson.toJson(sendSlot);
+
+    CompoundNBT parcelNBT = new CompoundNBT();
+    sendSlot.write(parcelNBT);
+    String parcelString = parcelNBT.getString();
+
+
+    System.out.println("sendingparcelString: " + parcelString);
+
+    // if there are no items return error
+    if (sendSlot.isEmpty()) {
+      return "No items to send";
+    } else {
+      LettersMod.network.sendToServer(new SendParcelPacket("hardcodedaddress", parcelString));
+      tile.parcelSent();
+      return "Parcel sent";
     }
   }
 

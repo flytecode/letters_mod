@@ -58,7 +58,7 @@ public class CollectionBoxBlock extends Block {
             EntityType.LIGHTNING_BOLT.spawn(((ServerWorld) worldIn), null, player,
                 pos, SpawnReason.TRIGGERED, true, true);
 
-            ((CollectionBoxTile)tileEntity).lightningHasStruck();
+//            ((CollectionBoxTile)tileEntity).lightningHasStruck();
           }
         }
       }

@@ -22,7 +22,6 @@ public class MailboxScreen extends ContainerScreen<MailboxContainer> {
   }
 
   @Override
-  // button for refreshing our mailbox
   protected void init() {
     super.init();
     int i = this.guiLeft;

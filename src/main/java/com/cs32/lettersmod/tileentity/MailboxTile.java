@@ -21,11 +21,16 @@ import javax.annotation.Nullable;
 
 public class MailboxTile extends TileEntity {
 
-  private final ItemStackHandler itemHandler = createHandler();
-  private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
+  // according to this post, need a wrapper thing so that you can only take out
+  // https://forums.minecraftforge.net/topic/86173-1152-add-item-to-output-slot-player-can-only-remove/?do=findComment&comment=404876
+  private ItemStackHandler itemHandler;
+  private ItemStackHandler itemHandlerWrapper;
+  private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandlerWrapper);
 
   public MailboxTile(TileEntityType<?> tileEntityTypeIn) {
     super(tileEntityTypeIn);
+    itemHandler = createHandler();
+    itemHandlerWrapper = new OnlyRemoveWrapper(itemHandler);
   }
 
   public MailboxTile() {
@@ -45,28 +50,30 @@ public class MailboxTile extends TileEntity {
   }
 
   private ItemStackHandler createHandler() {
-    return new ItemStackHandler(2) {
+    return new ItemStackHandler(63) {
       @Override
       protected void onContentsChanged(int slot) {
         markDirty();
       }
 
-      // TODO make this so that if it's a receiving slot always false, if it's a sending slot true only for parcels and stamps
       @Override
       public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        switch (slot) {
-          case 0: return stack.getItem() == Items.GLASS_PANE;
-          case 1: return stack.getItem() == ModItems.AMETHYST.get() ||
-              stack.getItem() == ModItems.FIRESTONE.get();
-          default:
-            return false;
-        }
+        // TODO modify this so that the player cannot put any items in, but the game can.
+        //  also make it so that it can only hold envelopes
+//        switch (slot) {
+//          case 0: return stack.getItem() == Items.GLASS_PANE;
+//          case 1: return stack.getItem() == ModItems.AMETHYST.get() ||
+//              stack.getItem() == ModItems.FIRESTONE.get();
+//          default:
+//            return false;
+//        }
+        return true;
       }
 
       // TODO here, for the send pane, we want to add logic to only allow 1 stamp and one parcel
       @Override
       public int getSlotLimit(int slot) {
-        return 1;
+        return 64;
       }
 
       @Nonnull
@@ -81,7 +88,6 @@ public class MailboxTile extends TileEntity {
     };
   }
 
-  //TODO remove, don't think we need this it's for being able to make hoppers feed in
   @Nonnull
   @Override
   public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -90,6 +96,39 @@ public class MailboxTile extends TileEntity {
     }
 
     return super.getCapability(cap, side);
+  }
+
+  /**
+   * Method to get the number of slots available
+   * @return - the number of empty slots available
+   */
+  public int getEmptySlots() {
+    return itemHandler.getSlots();
+  }
+
+  /**
+   * Method to remove all of the items currently in tile
+   */
+  public void removeAllItems() {
+    itemHandler = createHandler();
+    itemHandlerWrapper = new OnlyRemoveWrapper(itemHandler);
+  }
+
+  /**
+   * Method that can only be called by the game (not GUI) to add items to the inventory.
+   * @param parcel - ItemStack to add
+   * @return true if succeeded, false if no room
+   */
+  public boolean addParcel(ItemStack parcel) {
+    // TODO change so that this only takes in sealed envelopes
+    for (int i=0; i < 27; i++) {
+      boolean slotEmpty = this.itemHandler.getStackInSlot(i).getCount() == 0;
+      if (slotEmpty) {
+        this.itemHandler.insertItem(i, parcel, false);
+        return true;
+      }
+    }
+    return false; //otherwise, we did not find space
   }
 
   public void lightningHasStruck() {
