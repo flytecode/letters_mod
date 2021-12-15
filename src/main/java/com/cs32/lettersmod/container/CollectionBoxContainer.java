@@ -7,10 +7,13 @@ import com.cs32.lettersmod.network.SendParcelPacket;
 import com.cs32.lettersmod.saveddata.SavedDataClass;
 import com.cs32.lettersmod.tileentity.CollectionBoxTile;
 import com.google.gson.Gson;
+import net.minecraft.command.arguments.NBTTagArgument;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -53,12 +56,26 @@ public class CollectionBoxContainer extends Container {
     CollectionBoxTile tile = (CollectionBoxTile) this.tileEntity;
     ItemStack sendSlot = tile.getSendSlot();
 
-    // convert into a json string
+//    NBTTagCompound n = new NBTTagCompound();
+
+    /*
+    Parcel serialization this doesnt work
+
+ CompoundNBT parcelNBT = new CompoundNBT();
+    sendSlot.write(parcelNBT);
+    String parcelString = parcelNBT.getString();
+
+     */
+    // DOES NOT WORK convert into a json string
+//    Gson gson = new Gson();
+//    String parcelString = gson.toJson(sendSlot);
+
     CompoundNBT parcelNBT = new CompoundNBT();
     sendSlot.write(parcelNBT);
     String parcelString = parcelNBT.getString();
 
-    System.out.println("parcelString: " + parcelString);
+
+    System.out.println("sendingparcelString: " + parcelString);
 
     // if there are no items return error
     if (sendSlot.isEmpty()) {

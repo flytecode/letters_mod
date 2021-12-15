@@ -53,7 +53,7 @@ public class MailboxContainer extends Container {
 
     if(tileEntity != null) {
       tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-        for (int i=0; i < 18; i++) {
+        for (int i=0; i < 9; i++) {
           addSlot(new SlotItemHandler(h, i, 8 + (18*i), 18)); //row 1
           addSlot(new SlotItemHandler(h, i + 18, 8 + (18*i), 36)); //row 2
           addSlot(new SlotItemHandler(h, i + 36, 8 + (18*i), 54)); //row 3

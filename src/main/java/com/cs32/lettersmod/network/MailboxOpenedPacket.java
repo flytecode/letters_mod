@@ -8,6 +8,7 @@ import com.cs32.lettersmod.tileentity.MailboxTile;
 import com.google.gson.Gson;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
+
 
 public class MailboxOpenedPacket {
   private BlockPos pos;
@@ -71,25 +73,20 @@ public class MailboxOpenedPacket {
           // loop through and repopulate the mailbox
           for (INBT p : parcelList) {
             // cast it to a CompoundNBT, then get the parcelString and turn into ItemStack
+            String parcelString = ((CompoundNBT) p).getString("parcelString");
 
-            // TODO fix getting the parcelString out of here idk if i should use getCompound
-            CompoundNBT parcelNBT = ((CompoundNBT) p).getCompound("parcelString");
+            System.out.println("receivedparcelString: "+ parcelString);
 
-            System.out.println("parcelNBT: "+ parcelNBT);
-
-            // TODO figure out how to deserialize into an item
-//            ItemStack parcel = new ItemStack();
-//            parcel.deserializeNBT(parcelNBT);
-
+            // TODO figure out how to actually deserialize into an item
 //            ItemStack parcel = gson.fromJson(parcelString, ItemStack.class);
-//            System.out.println("parcel: " + parcel);
+            ItemStack parcel = new ItemStack(Items.POPPY.getItem());
 
             // add to tile entity and error check
-//            if (parcel != null) {
-//              if (!tileEntity.addParcel(parcel)) {
-//                throw new IllegalStateException("ERROR mailbox ran out of room");
-//              }
-//            }
+            if (parcel != null) {
+              if (!tileEntity.addParcel(parcel)) {
+                throw new IllegalStateException("ERROR mailbox ran out of room");
+              }
+            }
 
           }
         } else {
